@@ -1,0 +1,209 @@
+#loading {
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  position: fixed;
+  display: block;
+  opacity: 0.7;
+  background-color: #fff;
+  z-index: 99;
+  text-align: center;
+}
+
+#loading-image {
+  top: 33.33%;
+  left: 50%;
+  width: 50px;
+  height: 50px;
+  margin-top: -25px;
+  /*set to a negative number 1/2 of your height*/
+  margin-left: -25px;
+  /*set to a negative number 1/2 of your width*/
+  position: absolute;
+  z-index: 100;
+}
+
+/* -------------------------------------------------------------------------- */
+
+/* -------------------------------------------------------------------------- */
+
+@media all {
+  #main {
+    -webkit-box-sizing: border-box;
+    /* Safari/Chrome, other WebKit */
+    -moz-box-sizing: border-box;
+    /* Firefox, other Gecko */
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    margin: 0px 0px 0px 0px;
+    align-items: center;
+    justify-content: center;
+    transition: margin-left .5s;
+    resize: none;
+  }
+  #simulationDiv {
+    -webkit-box-sizing: border-box;
+    /* Safari/Chrome, other WebKit */
+    -moz-box-sizing: border-box;
+    /* Firefox, other Gecko */
+    box-sizing: border-box;
+    box-shadow: 2px 2px 12px 2px rgba(0, 0, 0, 0.2);
+    padding-left: 50px;
+    padding-right: 50px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    width: 80%;
+    height: 80%;
+    overflow: hidden;
+    resize: none;
+  }
+  .DivBox {
+    margin: auto;
+    align-items: center;
+    justify-content: center;
+    resize: both;
+    resize: none;
+  }
+
+  #SimulationOptions {
+    width: 100%;
+    overflow: hidden;
+
+  }
+
+  #DIVsliders {
+    float: left;
+    width: 70%;
+    height: 100%;
+  }
+
+  .DIV_inner_slidecontainer {
+    float: left;
+    width: 100%;
+    display: block;
+  }
+  .DIV_buttoncontainer {
+    float: left;
+    width: 20%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    display: inline-block;
+  }
+
+  #Slider1Value {
+    font-weight: bold;
+    font-size: 16px;
+  }
+  #Slider2Value {
+    font-weight: bold;
+    font-size: 16px;
+  }
+  #Slider3Value {
+    font-weight: bold;
+    font-size: 16px;
+  }
+
+  #SimulationHeader {
+    margin-top: 2px;
+    align-items: center;
+    text-align: center;
+    font-size: 26px;
+  }
+
+  #GRAPH_XY {
+    float: left;
+    /* border-style: solid;
+    border-color: green; */
+    width: 400px;
+    height: 400px;
+    display: block;
+    overflow: hidden;
+  }
+}
+
+
+/* -------------------------------------------------------------------------- */
+
+.slider {
+  -webkit-appearance: none;
+  /* margin-left: 10px; */
+  width: 60%;
+  height: 20px;
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+  -moz-border-radius: 6px 6px 6px 6px;
+  -webkit-border-radius: 6px 6px 6px 6px;
+  border-radius: 6px 6px 6px 6px;
+
+}
+
+.slider:hover {
+  opacity: 1;
+  cursor: pointer;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 25px;
+  height: 20px;
+  background: DodgerBlue;
+  cursor: grabbing;
+  -moz-border-radius: 6px 6px 6px 6px;
+  -webkit-border-radius: 6px 6px 6px 6px;
+  border-radius: 6px 6px 6px 6px;
+}
+
+.slider::-moz-range-thumb {
+  width: 25px;
+  height: 25px;
+  background: #4CAF50;
+  cursor: grabbing;
+}
+
+/* -------------------------------------------------------------------------- */
+
+/* -------------------------------------------------------------------------- */
+
+.button {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 16px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 0px 0px;
+  width: 100%;
+  -webkit-transition-duration: 0.4s;
+  /* Safari */
+  transition-duration: 0.4s;
+  cursor: pointer;
+  -moz-border-radius: 6px 6px 6px 6px;
+  -webkit-border-radius: 6px 6px 6px 6px;
+  border-radius: 6px 6px 6px 6px;
+}
+
+.button1 {
+  background-color: white;
+  color: black;
+  border: 2px solid DodgerBlue;
+}
+
+.button1:hover {
+  background-color: DodgerBlue;
+  color: white;
+}
+
+.scatterlayer .trace:last-child path {
+    pointer-events: all;
+}
+
+/* -------------------------------------------------------------------------- */
