@@ -43,7 +43,7 @@
     transition: margin-left .5s;
     resize: none;
   }
-  #simulationDiv {
+  #SimulationDiv {
     -webkit-box-sizing: border-box;
     /* Safari/Chrome, other WebKit */
     -moz-box-sizing: border-box;
@@ -93,15 +93,7 @@
     display: inline-block;
   }
 
-  #Slider1Value {
-    font-weight: bold;
-    font-size: 16px;
-  }
-  #Slider2Value {
-    font-weight: bold;
-    font-size: 16px;
-  }
-  #Slider3Value {
+  .SliderValue {
     font-weight: bold;
     font-size: 16px;
   }
