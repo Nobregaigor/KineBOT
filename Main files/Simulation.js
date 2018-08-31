@@ -106,7 +106,7 @@ class Simulation {
   startLayout() {
     this.RunSimulation();
 
-    var layout_XY = this.CreateLayout_3D('X x Y', this.GRAPH_3D_RANGE_X, this.GRAPH_3D_RANGE_Y, this.GRAPH_3D_RANGE_Z);
+    var layout_XY = this.CreateLayout_3D('X vs. Y', this.GRAPH_3D_RANGE_X, this.GRAPH_3D_RANGE_Y, this.GRAPH_3D_RANGE_Z);
 
     // this.Line1.trace = this.CreateColorTrace(this.Line1.x, this.Line1.y, 'Arm1','rgb(91, 27, 223)');
     // this.Line2.trace = this.CreateColorTrace(this.Line2.x, this.Line2.y, 'Arm2','rgb(91, 27, 223)');
@@ -146,17 +146,28 @@ class Simulation {
   CreateLayout_3D(name,rangex,rangey,rangez){
     var layout = {
       // backgroundcolor: 'rgb(255,0,0)',
+      scene: {
+        aspectmode: 'manual',
+        aspectratio: {
+          x: 1,
+          y: 1,
+          z: 1,
+        },
       xaxis: {
+        hoverformat: '.3f',
+        nticks: 11, //will be an input later on
         range: rangex,
       },
       yaxis: {
         hoverformat: '.3f',
+        nticks: 11,
         range: rangey,
       },
       zaxis: {
         hoverformat: '.3f',
+        nticks: 11,
         range: rangez,
-      },
+      }},
       showlegend: false,
       title: name,
       margin: {
