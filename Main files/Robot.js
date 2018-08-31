@@ -3,18 +3,18 @@ class Robot {
 
     this.TABLE = document.getElementById('DHtable');
 
-    this.n_arms = this.TABLE.rows.length;
+    this.n_arms = this.TABLE.rows.length -1;
     this.arms = Array.apply(null, Array(this.n_arms).map(Number.prototype.valueOf, 0)); // empty
     this.armTMs = Array.apply(null, Array(this.n_arms).map(Number.prototype.valueOf, 0));
 
   }
 
   createArm(i) {
-    var be = Number(this.TABLE.rows[i].cells[0].innerHTML);
+    var be = Number(this.TABLE.rows[i+1].cells[0].innerHTML);
     console.log(i);
-    var a = Number(this.TABLE.rows[i].cells[1].innerHTML);
-    var d = Number(this.TABLE.rows[i].cells[2].innerHTML);
-    var th = Number(this.TABLE.rows[i].cells[3].innerHTML);
+    var a = Number(this.TABLE.rows[i+1].cells[1].innerHTML);
+    var d = Number(this.TABLE.rows[i+1].cells[2].innerHTML);
+    var th = Number(this.TABLE.rows[i+1].cells[3].innerHTML);
     this.arms[i] = new Arm(be, a, d, th);
     this.arms[i].updateTM();
     this.arms[i].updateType();
@@ -32,7 +32,7 @@ class Robot {
   }
 
   buildRobot() {
-    for (var i = 0; i < this.TABLE.rows.length; i++) {
+    for (var i = 0; i < this.n_arms; i++) {
       this.createArm(i);
     }
     console.log(this.arms);
