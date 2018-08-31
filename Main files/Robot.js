@@ -1,15 +1,6 @@
 class Robot {
   constructor() {
 
-    this.initialPos = {
-      th1 = null,
-      th2 = null,
-      th3 = null,
-      th4 = null,
-      th5 = null,
-      th6 = null,
-    }
-
     this.TABLE = document.getElementById('DHtable');
 
     this.n_arms = this.TABLE.rows.length;
@@ -66,7 +57,7 @@ class Robot {
     for (var i = 1; i < this.n_arms; i++) {
       this.armTMs[i] = this.arms[i].TM;
       for (var j = i; j > 1; j--) {
-        matrixIter = matrixIter * this.armTMs[j];
+        matrixIter = math.multiply(matrixIter,this.armTMs[j]);
       this.armTMs[i] = matrixIter;
       matrixIter = matrix;
       }
