@@ -9,8 +9,11 @@
   <link rel="stylesheet" href="main.css">
 
   <script type="text/javascript" src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/5.1.1/math.min.js"></script>
   <script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
   <script type="text/javascript" src="Simulation.js"></script>
+  <script type="text/javascript" src="Arm.js"></script>
+  <script type="text/javascript" src="Robot.js"></script>
 
   <title>KINEBot - 3D n-DoF Simulation</title>
 </head>
@@ -20,6 +23,8 @@
   <!--______________________Creating a loading Screen_____________________________  -->
   <div id="loading">
     <img id="loading-image" src="ajax-loader.gif" alt="Loading..." />
+
+
 
   </div>
 
@@ -84,15 +89,21 @@
             <label for="Slider1">theta1: <span id="Slider1Value" class="SliderValue"></span> </label>
             <input id="Slider1" type="range" min="0" max="360" value="30" step="1" class="slider">
 
+
+
           </div>
           <div id="DivSlider2" class="DIV_inner_slidecontainer">
             <label for="Slider2">theta2: <span id="Slider2Value" class="SliderValue"></span> </label>
             <input id="Slider2" type="range" min="0" max="360" value="45" step="1" class="slider">
 
+
+
           </div>
           <div id="DivSlider3" class="DIV_inner_slidecontainer">
             <label for="Slider3">theta3: <span id="Slider3Value" class="SliderValue"></span> </label>
             <input id="Slider3" type="range" min="0" max="360" value="90" step="1" class="slider">
+
+
 
           </div>
         </div>
@@ -129,6 +140,7 @@
       $('#main').fadeIn();
     });
     Simu = new Simulation();
+    Arm = new Arm()
   </script>
 
 </body>

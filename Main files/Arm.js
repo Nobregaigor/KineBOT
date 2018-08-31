@@ -1,5 +1,5 @@
 class Arm {
-  constructor(be, a, d, th) {
+  constructor() {
 
     this.type = null;
 
@@ -18,19 +18,29 @@ class Arm {
     ];
 
     this.coordinates = {
-      x: null,
-      y: null,
-      z: null,
+      x: [null, null],
+      y: [null, null],
+      z: [null, null],
     }
+
+
   }
+
   updateType() {
     if ((isNaN(this.properties.d) == true) && (isNaN(this.properties.th) == false)) {
       this.type = 1;
-    } else if ((isNaN(this.properties.th) == false)  && (isNaN(this.properties.d) == true)){
+    } else if ((isNaN(this.properties.th) == false) && (isNaN(this.properties.d) == true)) {
       this.type = 0;
     } else {
-      alert("Please, check links. ");
+      alert("Error f<updateType> in Arms.js\nPlease, check links.");
     }
+  }
+
+  updateAngles(val) {
+    this.properties.th = val * 0.01745329251; //(Math.PI/180);
+  }
+  updateDistance(val) {
+    this.properties.d = val;
   }
 
   updateTM() {
@@ -49,8 +59,11 @@ class Arm {
     this.TM[2][1] = Math.cos(this.properties.th) * Math.sin(this.properties.be);
     this.TM[2][2] = Math.cos(this.properties.be);
     this.TM[2][3] = Math.cos(this.properties.be) * this.properties.d;
-
   }
 
+
+  updateCoordinates(cord, val) { //NOT SURE IF THIS WORK. BUT IF IT WORKS, ITS DOPE!!!
+    this.cordinate.cord = val;
+  }
 
 }
