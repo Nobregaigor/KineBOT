@@ -53,16 +53,9 @@ class Robot {
   }
 
   updateFwKin(arms) {
-    var matrix = createIM();
-    var matrixIter = matrix;
     this.armTMs[0] = this.arms[0].TM;
     for (var i = 1; i < this.n_arms; i++) {
-      this.armTMs[i] = this.arms[i].TM;
-      for (var j = i; j > 1; j--) {
-        matrixIter = math.multiply(matrixIter, this.armTMs[j]);
-        this.armTMs[i] = matrixIter;
-        matrixIter = matrix;
-      }
+      this.armTMs[i] = math.multiply(this.armTMs[i-1],this.arms[i].TM)
     }
 
   }
