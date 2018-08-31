@@ -40,6 +40,8 @@ class Simulation {
     this.GRAPH_3D_RANGE_Y = [-11, 11];
     this.GRAPH_3D_RANGE_Z = [-11, 11];
 
+    this.TABLE = document.getElementById('DHtable');
+
   }
 
   changeParamenter(p, val) {
@@ -63,9 +65,7 @@ class Simulation {
 
   apply_forwardKinematics() {
     this.coordinates.x = (this.parameters.L1 * Math.cos(this.angles.theta1) + this.parameters.L2 * Math.cos(this.angles.theta1 + this.angles.theta2))*Math.sin(this.angles.theta3);
-
     this.coordinates.y = this.parameters.L1 * Math.sin(this.angles.theta1) + this.parameters.L2 * Math.sin(this.angles.theta1 + this.angles.theta2);
-
     this.coordinates.z = (this.parameters.L1 * Math.cos(this.angles.theta1) + this.parameters.L2 * Math.cos(this.angles.theta1 + this.angles.theta2))*Math.cos(this.angles.theta3);
 
   }
