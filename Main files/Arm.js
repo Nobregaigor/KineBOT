@@ -1,5 +1,5 @@
 class Arm {
-  constructor() {
+  constructor(be, a, d, th) {
 
     this.type = null;
 
@@ -27,13 +27,14 @@ class Arm {
   }
 
   updateType() {
-    if ((isNaN(this.properties.d) == true) && (isNaN(this.properties.th) == false)) {
-      this.type = 1;
-    } else if ((isNaN(this.properties.th) == false) && (isNaN(this.properties.d) == true)) {
-      this.type = 0;
-    } else {
-      alert("Error f<updateType> in Arms.js\nPlease, check links.");
-    }
+    // if ((isNaN(this.properties.d) == true) && (isNaN(this.properties.th) == false)) {
+    //   this.type = 1;
+    // } else if ((isNaN(this.properties.th) == false) && (isNaN(this.properties.d) == true)) {
+    //   this.type = 0;
+    // } else {
+    //   alert("Error f<updateType> in Arms.js\nPlease, check links.");
+    // }
+    
   }
 
   updateAngles(val) {

@@ -37,13 +37,13 @@ class Robot {
   }
 
   createIM() {
-    var IM = Array.apply(null, Array(this.n_arms).map(Number.prototype.valueOf, 0))
+    var IM = Array.apply(null, Array(this.n_arms).map(Number.prototype.valueOf, 0));
     for (var i = 0; i < this.n_arms; i++) {
+      IM[i] = Array.apply(null, Array(this.n_arms).map(Number.prototype.valueOf, 0));
       for (var j = 0; j < this.n_arms; j++) {
         if (i == j) {
           IM[i][j] = 1;
-        }
-        else {
+        } else {
           IM[i][j] = 0;
         }
       }
@@ -57,9 +57,9 @@ class Robot {
     for (var i = 1; i < this.n_arms; i++) {
       this.armTMs[i] = this.arms[i].TM;
       for (var j = i; j > 1; j--) {
-        matrixIter = math.multiply(matrixIter,this.armTMs[j]);
-      this.armTMs[i] = matrixIter;
-      matrixIter = matrix;
+        matrixIter = math.multiply(matrixIter, this.armTMs[j]);
+        this.armTMs[i] = matrixIter;
+        matrixIter = matrix;
       }
     }
 
