@@ -4,10 +4,10 @@ class Arm {
     this.type = null;
 
     this.properties = {
-      be: null,
-      a: null,
-      d: null,
-      th: null,
+      be: be,
+      a: a,
+      d: d,
+      th: th,
     }
 
     this.TM = [
@@ -34,7 +34,7 @@ class Arm {
     // } else {
     //   alert("Error f<updateType> in Arms.js\nPlease, check links.");
     // }
-    
+
   }
 
   updateAngles(val) {

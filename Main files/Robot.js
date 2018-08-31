@@ -11,6 +11,7 @@ class Robot {
 
   createArm(i) {
     var be = Number(this.TABLE.rows[i].cells[0].innerHTML);
+    console.log(i);
     var a = Number(this.TABLE.rows[i].cells[1].innerHTML);
     var d = Number(this.TABLE.rows[i].cells[2].innerHTML);
     var th = Number(this.TABLE.rows[i].cells[3].innerHTML);
@@ -34,6 +35,7 @@ class Robot {
     for (var i = 0; i < this.TABLE.rows.length; i++) {
       this.createArm(i);
     }
+    console.log(this.arms);
   }
 
   createIM() {
