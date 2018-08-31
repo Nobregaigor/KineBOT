@@ -36,6 +36,10 @@ class Simulation {
     this.GRAPH_2D_RANGE_X = [-11, 11];
     this.GRAPH_2D_RANGE_Y = [-11, 11];
 
+    this.GRAPH_3D_RANGE_X = [-11, 11];
+    this.GRAPH_3D_RANGE_Y = [-11, 11];
+    this.GRAPH_3D_RANGE_Z = [-11, 11];
+
   }
 
   changeParamenter(p, val) {
@@ -73,9 +77,13 @@ class Simulation {
 
     this.Line2.x[0] = this.Line1.x[1];
     this.Line2.y[0] = this.Line1.y[1];
+    this.Line2.z[0] = this.Line1.z[1];
 
     this.Line2.x[1] = this.coordinates.x;
     this.Line2.y[1] = this.coordinates.y;
+
+    this.Line1.z[1] = this.parameters.L1 * Math.sin(this.angles.theta3);
+    this.Line2.z[1] = this.coordinates.z;
 
   }
 
@@ -91,16 +99,21 @@ class Simulation {
     Plotly.restyle(this.GRAPH_XY, {
       'x': [this.Line1.x, this.Line2.x],
       'y': [this.Line1.y, this.Line2.y],
+      'z': [this.Line1.z, this.Line2.z],
     }, [0, 1], );
   }
 
   startLayout() {
     this.RunSimulation();
 
-    var layout_XY = this.CreateLayout('X x Y', this.GRAPH_2D_RANGE_X, this.GRAPH_2D_RANGE_Y);
+    var layout_XY = this.CreateLayout_3D('X x Y', this.GRAPH_3D_RANGE_X, this.GRAPH_3D_RANGE_Y, this.GRAPH_3D_RANGE_Z);
 
-    this.Line1.trace = this.CreateColorTrace(this.Line1.x, this.Line1.y, 'Arm1','rgb(91, 27, 223)');
-    this.Line2.trace = this.CreateColorTrace(this.Line2.x, this.Line2.y, 'Arm2','rgb(91, 27, 223)');
+    // this.Line1.trace = this.CreateColorTrace(this.Line1.x, this.Line1.y, 'Arm1','rgb(91, 27, 223)');
+    // this.Line2.trace = this.CreateColorTrace(this.Line2.x, this.Line2.y, 'Arm2','rgb(91, 27, 223)');
+
+    this.Line1.trace = this.CreateColorTrace_3D(this.Line1.x, this.Line1.y, this.Line1.z, 'Arm1','rgb(91, 27, 223)');
+    this.Line2.trace = this.CreateColorTrace_3D(this.Line2.x, this.Line2.y, this.Line2.z, 'Arm2','rgb(242, 70, 33)');
+
 
     Plotly.newPlot(this.GRAPH_XY, [this.Line1.trace, this.Line2.trace], layout_XY);
 
@@ -128,7 +141,34 @@ class Simulation {
 
     };
     return layout;
+  }
 
+  CreateLayout_3D(name,rangex,rangey,rangez){
+    var layout = {
+      // backgroundcolor: 'rgb(255,0,0)',
+      xaxis: {
+        range: rangex,
+      },
+      yaxis: {
+        hoverformat: '.3f',
+        range: rangey,
+      },
+      zaxis: {
+        hoverformat: '.3f',
+        range: rangez,
+      },
+      showlegend: false,
+      title: name,
+      margin: {
+        l: 40,
+        r: 25,
+        b: 25,
+        t: 40,
+        pad: 10
+      },
+
+    };
+    return layout;
   }
 
 
@@ -137,6 +177,50 @@ class Simulation {
     var BlueTRACES = {
       x: xpoints,
       y: ypoints,
+      mode: 'lines+markers',
+      name: name,
+      line: {
+        color: RGBcolor,
+        size: 20,
+        width: 2
+      },
+      marker: {
+        color: RGBcolor,
+        symbol: "circle-open-dot",
+        size: 15
+      }
+    }
+    return BlueTRACES;
+  }
+
+  CreateColorTrace_3D(xpoints, ypoints, zpoints, name, RGBcolor) {
+    var BlueTRACES = {
+      x: xpoints,
+      y: ypoints,
+      z: zpoints,
+      type:'scatter3d',
+      mode: 'lines+markers',
+      name: name,
+      line: {
+        color: RGBcolor,
+        size: 20,
+        width: 2
+      },
+      marker: {
+        color: RGBcolor,
+        symbol: "circle-open-dot",
+        size: 15
+      }
+    }
+    return BlueTRACES;
+  }
+
+  CreateColorTrace_3D(xpoints, ypoints, zpoints, name, RGBcolor) {
+    var BlueTRACES = {
+      x: xpoints,
+      y: ypoints,
+      z: zpoints,
+      type:'scatter3d',
       mode: 'lines+markers',
       name: name,
       line: {
