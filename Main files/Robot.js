@@ -10,11 +10,10 @@ class Robot {
   }
 
   createArm(i) {
-    var be = Number(this.TABLE.rows[i+1].cells[0].innerHTML);
-    console.log(i);
+    var be = Number(this.TABLE.rows[i+1].cells[0].innerHTML)* 0.01745329251;
     var a = Number(this.TABLE.rows[i+1].cells[1].innerHTML);
     var d = Number(this.TABLE.rows[i+1].cells[2].innerHTML);
-    var th = Number(this.TABLE.rows[i+1].cells[3].innerHTML);
+    var th = Number(this.TABLE.rows[i+1].cells[3].innerHTML)* 0.01745329251;
     this.arms[i] = new Arm(be, a, d, th);
     this.arms[i].updateTM();
     this.arms[i].updateType();
