@@ -20,6 +20,7 @@
   <!--______________________Creating a loading Screen_____________________________  -->
   <div id="loading">
     <img id="loading-image" src="ajax-loader.gif" alt="Loading..." />
+
   </div>
 
   <!-- ______________________Starting html body___________________________________ -->
@@ -27,6 +28,54 @@
   <!-- Creating the main div space -->
   <div id="main" class="DIVmain" style="display: none;">
     <h2 id="SimulationHeader">KINEBOT - A 3D n-DoF Simulation</h2>
+
+    <div id="DIVtable" class="DivBox">
+
+      <table id="SimulationTABLE" class="TableContent">
+        <thead>
+          <tr>
+            <th> Link[i] </th>
+            <th> &alpha;[i-1]</th>
+            <th> a[i-1]</th>
+            <th> d[1]</th>
+            <th> &theta;[1]</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td> 1 </td>
+            <td><input type="text"></td>
+            <td><input type="text"></td>
+            <td><input type="text"></td>
+            <td><input type="text"></td>
+          </tr>
+          <tr>
+            <td> 2 </td>
+            <td><input type="text"></td>
+            <td><input type="text"></td>
+            <td><input type="text"></td>
+            <td><input type="text"></td>
+          </tr>
+          <tr>
+            <td> 3 </td>
+            <td><input type="text"></td>
+            <td><input type="text"></td>
+            <td><input type="text"></td>
+            <td><input type="text"></td>
+          </tr>
+          <tr>
+            <td> 4 </td>
+            <td><input type="text"></td>
+            <td><input type="text"></td>
+            <td><input type="text"></td>
+            <td><input type="text"></td>
+          </tr>
+        </tbody>
+      </table>
+      <br>
+      <button type="button" class="button button1"> Done! </button>
+    </div>
+
     <div id="SimulationDiv" class="DivBox"> &nbsp;
 
       <div id="SimulationOptions" class="DivBox">
@@ -34,14 +83,17 @@
           <div id="DivSlider1" class="DIV_inner_slidecontainer">
             <label for="Slider1">theta1: <span id="Slider1Value" class="SliderValue"></span> </label>
             <input id="Slider1" type="range" min="0" max="360" value="30" step="1" class="slider">
+
           </div>
           <div id="DivSlider2" class="DIV_inner_slidecontainer">
             <label for="Slider2">theta2: <span id="Slider2Value" class="SliderValue"></span> </label>
             <input id="Slider2" type="range" min="0" max="360" value="45" step="1" class="slider">
+
           </div>
           <div id="DivSlider3" class="DIV_inner_slidecontainer">
             <label for="Slider3">theta3: <span id="Slider3Value" class="SliderValue"></span> </label>
             <input id="Slider3" type="range" min="0" max="360" value="90" step="1" class="slider">
+
           </div>
         </div>
       </div>
