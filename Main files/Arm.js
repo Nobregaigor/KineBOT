@@ -24,10 +24,13 @@ class Arm {
     }
   }
   updateType() {
-    if (this.properties.d == '') {
-
+    if ((isNaN(this.properties.d) == true) && (isNaN(this.properties.th) == false)) {
+      this.type = 1;
+    } else if ((isNaN(this.properties.th) == false)  && (isNaN(this.properties.d) == true)){
+      this.type = 0;
+    } else {
+      alert("Please, check links. ");
     }
-
   }
 
   updateTM() {
