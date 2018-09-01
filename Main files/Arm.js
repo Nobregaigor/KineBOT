@@ -14,7 +14,7 @@ class Arm {
       [null, null, null, null],
       [null, null, null, null],
       [null, null, null, null],
-      [0, 0, 1, 0]
+      [0, 0, 0, 1]
     ];
 
     this.coordinates = {
