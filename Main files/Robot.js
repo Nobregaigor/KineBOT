@@ -37,27 +37,25 @@ class Robot {
     console.log(this.arms);
   }
 
-  createIM() {
-    var IM = Array.apply(null, Array(this.n_arms).map(Number.prototype.valueOf, 0));
-    for (var i = 0; i < this.n_arms; i++) {
-      IM[i] = Array.apply(null, Array(this.n_arms).map(Number.prototype.valueOf, 0));
-      for (var j = 0; j < this.n_arms; j++) {
-        if (i == j) {
-          IM[i][j] = 1;
-        } else {
-          IM[i][j] = 0;
-        }
-      }
-    }
-  }
-
   updateFwKin(arms) {
     this.armTMs[0] = this.arms[0].TM;
     for (var i = 1; i < this.n_arms; i++) {
       this.armTMs[i] = math.multiply(this.armTMs[i-1],this.arms[i].TM)
     }
-
   }
 
+  // createIM() {
+  //   var IM = Array.apply(null, Array(this.n_arms).map(Number.prototype.valueOf, 0));
+  //   for (var i = 0; i < this.n_arms; i++) {
+  //     IM[i] = Array.apply(null, Array(this.n_arms).map(Number.prototype.valueOf, 0));
+  //     for (var j = 0; j < this.n_arms; j++) {
+  //       if (i == j) {
+  //         IM[i][j] = 1;
+  //       } else {
+  //         IM[i][j] = 0;
+  //       }
+  //     }
+  //   }
+  // }
 
 }
