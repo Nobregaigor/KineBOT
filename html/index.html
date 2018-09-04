@@ -28,6 +28,16 @@
 	<!-- Custom stlylesheet -->
 	<link type="text/css" rel="stylesheet" href="css/style.css" />
 
+
+	<!-- Loading Simulation files -->
+	<script type="text/javascript" src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/5.1.1/math.min.js"></script>
+	<script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+	<script type="text/javascript" src="Main_files/Simulation.js"></script>
+	<script type="text/javascript" src="Main_files/Arm.js"></script>
+	<script type="text/javascript" src="Main_files/Robot.js"></script>
+
+
 	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
 	<!--[if lt IE 9]>
@@ -126,33 +136,36 @@
 				</div>
 				<!-- /Section header -->
 
-				<!-- about -->
-				<div class="col-md-4">
-					<div class="about">
-						<i class="fa fa-cogs"></i>
-						<h3>I have no idea where to start</h3>
-						<p>Maecenas tempus tellus eget condimentum rhoncus sem quam semper libero sit amet.</p>
-						<a href="#">Read more</a>
+				<!-- why choose us content -->
+				<div class="col-md-6">
+					<div class="section-header">
+						<h2 class="title">How to get started</h2>
+					</div>
+					<p>Molestie at elementum eu facilisis sed odio. Scelerisque in dictum non consectetur a erat. Aliquam id diam maecenas ultricies mi eget mauris. Ultrices sagittis orci a scelerisque purus.</p>
+					<div class="feature">
+						<i class="fa fa-check"></i>
+						<p>Quis varius quam quisque id diam vel quam elementum.</p>
+					</div>
+					<div class="feature">
+						<i class="fa fa-check"></i>
+						<p>Mauris augue neque gravida in fermentum.</p>
+					</div>
+					<div class="feature">
+						<i class="fa fa-check"></i>
+						<p>Orci phasellus egestas tellus rutrum.</p>
+					</div>
+					<div class="feature">
+						<i class="fa fa-check"></i>
+						<p>Nec feugiat nisl pretium fusce id velit ut tortor pretium.</p>
 					</div>
 				</div>
-				<!-- /about -->
-
-				<!-- about -->
-				<div class="col-md-4">
-					<div class="about">
-						<i class="fa fa-magic"></i>
-						<h3>I have a basic knoledge</h3>
-						<p>Maecenas tempus tellus eget condimentum rhoncus sem quam semper libero sit amet.</p>
-						<a href="#">Read more</a>
-					</div>
-				</div>
-				<!-- /about -->
+				<!-- /why choose us content -->
 
 				<!-- about -->
 				<div class="col-md-4">
 					<div class="about">
 						<i class="fa fa-mobile"></i>
-						<h3>I am already experienced</h3>
+						<h3>Start!</h3>
 						<p>Maecenas tempus tellus eget condimentum rhoncus sem quam semper libero sit amet.</p>
 						<a href="#">Read more</a>
 					</div>
@@ -221,7 +234,8 @@
 		        </tbody>
 		      </table>
 		      <br>
-		      <button type="button" class="button button1"> Done!</button>
+					<button id="addFrameButton" type="button" class="button button1"> Add a Frame!</button>
+		      <button id="DoneButton" type="button" class="button button1"> Done!</button>
 		    </div>
 
 			</div>
@@ -234,7 +248,7 @@
 	<!-- /Portfolio -->
 
 	<!-- Service -->
-	<div id="forwardKinematics" class="section md-padding">
+	<div id="forwardKinematics" class="section md-padding" >
 
 		<!-- Container -->
 		<div class="container">
@@ -274,6 +288,10 @@
 
 		          </div>
 		        </div>
+
+
+						<div id="GRAPH_3D">
+			      </div>
 		      </div>
 
 
@@ -687,6 +705,9 @@
 	<script type="text/javascript" src="js/owl.carousel.min.js"></script>
 	<script type="text/javascript" src="js/jquery.magnific-popup.js"></script>
 	<script type="text/javascript" src="js/main.js"></script>
+
+	<!-- Main File -->
+	 <script type="text/javascript" src="Main_files/main.js"></script>
 
 </body>
 
