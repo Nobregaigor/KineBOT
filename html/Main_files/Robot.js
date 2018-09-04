@@ -3,7 +3,7 @@ class Robot {
 
     this.TABLE = document.getElementById('DHtable');
 
-    this.n_arms = this.TABLE.rows.length - 1;
+    this.n_arms = null;
     this.arms = Array.apply(null, Array(this.n_arms).map(Number.prototype.valueOf, 0)); // empty
     this.armTMs = Array.apply(null, Array(this.n_arms).map(Number.prototype.valueOf, 0));
 
@@ -21,7 +21,6 @@ class Robot {
 
   //can only update the angle or a prismatic distance
   updateArmValues(arm, val) {
-    console.log(arm);
     if (arm.type == 0) { //revolute
       arm.updateAngles(val);
     }
@@ -34,6 +33,8 @@ class Robot {
   }
 
   buildRobot() {
+    //Update arm values;
+    this.n_arms = this.TABLE.rows.length - 1;
     for (var i = 0; i < this.n_arms; i++) {
       this.createArm(i);
     };
@@ -71,8 +72,8 @@ class Robot {
     }
     //console.log(this.arms);
     //console.log(this.armTMs);
-    console.log(this.arms[1].coordinates.x[0])
-    console.log(this.arms[1].coordinates.x[1])
+    // console.log(this.arms[1].coordinates.x[0])
+    // console.log(this.arms[1].coordinates.x[1])
   }
 
   // createIM() {
