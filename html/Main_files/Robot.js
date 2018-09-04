@@ -33,9 +33,11 @@ class Robot {
   }
 
   buildRobot() {
-    //Update arm values;
+    //Update Table values;
     this.n_arms = this.TABLE.rows.length - 1;
+    this.TABLE = document.getElementById('DHtable');
     for (var i = 0; i < this.n_arms; i++) {
+      console.log(i);
       this.createArm(i);
     };
   }

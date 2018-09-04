@@ -75,7 +75,7 @@ $(document).ready(function() {
       if (i == 0) {
         cell.innerHTML = table.rows.length - 1;
       } else {
-        cell.innerHTML = "<div contenteditable></div>";
+        cell.setAttribute("contenteditable", "true");
       }
     }
   }
@@ -127,6 +127,7 @@ $(document).ready(function() {
       Bot.updateArmValues(Bot.arms[armval], this.value);
       Bot.updateRobot();
       Simu.updateGraphs();
+      console.log(Bot.arms[armval]);
 
     });
   }
