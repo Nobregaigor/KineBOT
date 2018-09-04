@@ -1,34 +1,52 @@
 $(document).ready(function() {
   'use strict';
+  var Bot = new Robot();
+  var Simu = new Simulation(Bot);
+  document.getElementById("Slider1Value").innerHTML = pad(parseFloat(document.getElementById("Slider1").value).toFixed(0), 3);
+  document.getElementById("Slider2Value").innerHTML = pad(parseFloat(document.getElementById("Slider2").value).toFixed(0), 3);
+  document.getElementById("Slider3Value").innerHTML = pad(parseFloat(document.getElementById("Slider3").value).toFixed(0), 3);
 
-  var Simu = new Simulation();
-  document.getElementById("Slider1Value").innerHTML = pad(parseFloat(document.getElementById("Slider1").value).toFixed(0),3);
-  document.getElementById("Slider2Value").innerHTML = pad(parseFloat(document.getElementById("Slider2").value).toFixed(0),3);
-  document.getElementById("Slider3Value").innerHTML = pad(parseFloat(document.getElementById("Slider3").value).toFixed(0),3);
+
+  //put everything here when we need to create the first instance of the robot
+  document.getElementById("DoneButton").addEventListener("click", function() {
+    Bot.buildRobot();
+    Bot.updateRobot();
+    Simu.startLayout();
+    console.log(Bot);
+  });
 
   //Adding input event to Slider1
   document.getElementById("Slider1").addEventListener("input", function() {
-    document.getElementById("Slider1Value").innerHTML = pad(parseFloat(this.value).toFixed(0),3);
-    Simu.changeAngle(1,this.value);
+    document.getElementById("Slider1Value").innerHTML = pad(parseFloat(this.value).toFixed(0),3); //updating the "number displayed" next to slider
+    Bot.updateArmValues(Bot.arms[0],this.value);
+    Bot.updateRobot();
     Simu.updateGraphs();
+
   });
+
   //Adding input event to Slider2
   document.getElementById("Slider2").addEventListener("input", function() {
     document.getElementById("Slider2Value").innerHTML = pad(parseFloat(this.value).toFixed(0),3);
-    Simu.changeAngle(2,this.value);
+    Bot.updateArmValues(Bot.arms[1],this.value);
+    Bot.updateRobot();
     Simu.updateGraphs();
+
   });
   //Adding input event to Slider3
   document.getElementById("Slider3").addEventListener("input", function() {
     document.getElementById("Slider3Value").innerHTML = pad(parseFloat(this.value).toFixed(0),3);
-    Simu.changeAngle(3,this.value);
+    Bot.updateArmValues(Bot.arms[2],this.value);
+    Bot.updateRobot();
     Simu.updateGraphs();
+
   });
+
+
 
   function pad(num, size) {
     var s = "000000000" + num;
-    return s.substr(s.length-size);
-}
+    return s.substr(s.length - size);
+  }
 
 
 
@@ -54,8 +72,8 @@ $(document).ready(function() {
   // });
 
 
-  Simu.startLayout();
+  // Simu.startLayout();
   // Plotly.Plots.resize(Simu.GRAPH_XY);
 
-  console.log('Numerical Methods Simulation. Develop by Igor Nobrega, in assossiation with Dr. Kaw.');
+  console.log('3-DoF Simulation of Kinematic Robot, developed by Igor Nobrega and Azael del Rosario.');
 });

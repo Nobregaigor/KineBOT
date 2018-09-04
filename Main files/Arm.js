@@ -23,10 +23,9 @@ class Arm {
       z: [null, null],
     }
 
-
   }
 
-  updateType() {
+  updateType(val) {
     // if ((isNaN(this.properties.d) == true) && (isNaN(this.properties.th) == false)) {
     //   this.type = 1;
     // } else if ((isNaN(this.properties.th) == false) && (isNaN(this.properties.d) == true)) {
@@ -34,7 +33,7 @@ class Arm {
     // } else {
     //   alert("Error f<updateType> in Arms.js\nPlease, check links.");
     // }
-
+    this.type = val; // 0 is revolute and 1 is prismatic
   }
 
   updateAngles(val) {
@@ -45,9 +44,8 @@ class Arm {
   }
 
   updateTM() {
-
     this.TM[0][0] = Math.cos(this.properties.th);
-    this.TM[0][1] = -Math.sin(this.properties.th);
+    this.TM[0][1] = -1 * Math.sin(this.properties.th);
     this.TM[0][2] = 0;
     this.TM[0][3] = this.properties.a;
 
