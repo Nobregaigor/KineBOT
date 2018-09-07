@@ -2,9 +2,6 @@ $(document).ready(function() {
   'use strict';
   var Bot = new Robot();
   var Simu = new Simulation(Bot);
-  // document.getElementById("Slider1Value").innerHTML = pad(parseFloat(document.getElementById("Slider1").value).toFixed(0), 3);
-  // document.getElementById("Slider2Value").innerHTML = pad(parseFloat(document.getElementById("Slider2").value).toFixed(0), 3);
-  // document.getElementById("Slider3Value").innerHTML = pad(parseFloat(document.getElementById("Slider3").value).toFixed(0), 3);
 
   document.getElementById("forwardKinematics").style.display = "none";
   document.getElementById("inverseKinematics").style.display = "none";
@@ -12,11 +9,16 @@ $(document).ready(function() {
   //Add a row to table
   document.getElementById("addFrameButton").addEventListener("click", function() {
     var table = document.getElementById("DHtable");
-    if (table.rows.length < 10) {
+    if (table.rows.length < 11) {
       addRow(table);
     } else {
-      alert("Maximum number of rows achieved");
+      alert("Hey, that is too many rows for me to handle!\n(Maximum number of rows added).");
     }
+  });
+
+  document.getElementById("removeFrameButton").addEventListener("click", function() {
+    var table = document.getElementById("DHtable");
+    deleteRow(table);
   });
 
   //put everything here when we need to create the first instance of the robot
@@ -31,33 +33,6 @@ $(document).ready(function() {
 
 
   });
-
-  //Adding input event to Slider1
-  // document.getElementById("Slider1").addEventListener("input", function() {
-  //   document.getElementById("Slider1Value").innerHTML = pad(parseFloat(this.value).toFixed(0), 3); //updating the "number displayed" next to slider
-  //   Bot.updateArmValues(Bot.arms[0], this.value);
-  //   Bot.updateRobot();
-  //   Simu.updateGraphs();
-  //
-  // });
-
-  //Adding input event to Slider2
-  // document.getElementById("Slider2").addEventListener("input", function() {
-  //   document.getElementById("Slider2Value").innerHTML = pad(parseFloat(this.value).toFixed(0), 3);
-  //   Bot.updateArmValues(Bot.arms[1], this.value);
-  //   Bot.updateRobot();
-  //   Simu.updateGraphs();
-  //
-  // });
-  //Adding input event to Slider3
-  // document.getElementById("Slider3").addEventListener("input", function() {
-  //   document.getElementById("Slider3Value").innerHTML = pad(parseFloat(this.value).toFixed(0), 3);
-  //   Bot.updateArmValues(Bot.arms[2], this.value);
-  //   Bot.updateRobot();
-  //   Simu.updateGraphs();
-  //
-  // });
-
 
 
   function pad(num, size) {
@@ -80,11 +55,18 @@ $(document).ready(function() {
     }
   }
 
+  function deleteRow(table) {
+    if ((table.rows.length - 1) > 2) {
+      table.deleteRow(table.rows.length - 1);
+    } else {
+      alert("Hey, don't delete everything!!!\n(Minimum number of rows added.)");
+    }
+  }
+
   function createSliders() {
     // Container <div> where dynamic content will be placed
     var DIVsliders = document.getElementById("DIVsliders");
     var table = document.getElementById("DHtable");
-    var ii = 0;
     // Clear previous contents of the container
     while (DIVsliders.hasChildNodes()) {
       DIVsliders.removeChild(DIVsliders.lastChild);
@@ -98,11 +80,12 @@ $(document).ready(function() {
       // _____________________________ LABELS AND SPAN VALUE ARE NOT WORKING ______________ //
       // _____________________________ LABELS AND SPAN VALUE ARE NOT WORKING ______________ //
       var label = document.createElement("label");
-      label.setAttribute("for", "input");
+      var labelfor = "slider" + i;
+      label.setAttribute("for", labelfor);
       var span = document.createElement("span");
       span.setAttribute("class", "SliderValue");
+      input.appendChild(span);
       DIVsliders.appendChild(label);
-      DIVsliders.appendChild(span);
       // _____________________________ LABELS AND SPAN VALUE ARE NOT WORKING ______________ //
       // _____________________________ LABELS AND SPAN VALUE ARE NOT WORKING ______________ //
       // ___________________________________ DO NOT KNOW WHY ______________________________ //
@@ -110,12 +93,13 @@ $(document).ready(function() {
       var input = document.createElement("input");
       input.id = "slider" + i;
       input.type = 'range';
-      input.max = 0;
+      input.min = 0;
       input.max = 360;
       input.step = 1;
-      input.value = "45";
+      input.value = "45"; //needs to get from table
       input.setAttribute("class", "slider");
       addSliderFunctions(input,i);
+
       DIVsliders.appendChild(input);
 
     }
@@ -131,33 +115,6 @@ $(document).ready(function() {
 
     });
   }
-
-
-
-
-
-  //Adding change event to Slider1
-  document.getElementById("Slider1").addEventListener("change", function() {
-    // Simu.updateULslope(this.value);
-    // Simu.updateUserLine();
-  });
-
-
-
-  //Adding Click event to Run Button
-  // document.getElementById("RunButton").addEventListener("click", function() {
-  // Simu.RunSimulation();
-  // });
-
-  //Adding Click event to Reset Button
-  // document.getElementById("ResetButton").addEventListener("click", function() {
-  // Simu.resetUL();
-  // Simu.startLayout();
-  // });
-
-
-  // Simu.startLayout();
-  // Plotly.Plots.resize(Simu.GRAPH_XY);
 
   console.log('3-DoF Simulation of Kinematic Robot, developed by Igor Nobrega and Azael del Rosario.');
 });
