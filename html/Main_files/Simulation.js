@@ -12,33 +12,33 @@ class Simulation {
     this.GRAPH_3D_RANGE_Z = [-11, 11];
 
     //Array that holds all traces. Used to plot later.
-    this.LineTraces = Array.apply(null, Array(this.robot.n_arms).map(Number.prototype.valueOf, 0));
+    this.LineTraces = Array.apply(null, Array(this.robot.n_frames).map(Number.prototype.valueOf, 0));
     this.data = {
-      xs: Array.apply(null, Array(this.robot.n_arms).map(Number.prototype.valueOf, 0)),
-      ys: Array.apply(null, Array(this.robot.n_arms).map(Number.prototype.valueOf, 0)),
-      zs: Array.apply(null, Array(this.robot.n_arms).map(Number.prototype.valueOf, 0)),
-      indices: Array.apply(null, Array(this.robot.n_arms).map(Number.prototype.valueOf, 0)),
+      xs: Array.apply(null, Array(this.robot.n_frames).map(Number.prototype.valueOf, 0)),
+      ys: Array.apply(null, Array(this.robot.n_frames).map(Number.prototype.valueOf, 0)),
+      zs: Array.apply(null, Array(this.robot.n_frames).map(Number.prototype.valueOf, 0)),
+      indices: Array.apply(null, Array(this.robot.n_frames).map(Number.prototype.valueOf, 0)),
     }
   }
 
   createTraces() {
-    for (var i = 0; i < this.robot.n_arms; i++) {
-      this.LineTraces[i] = this.CreateColorTrace_3D(this.robot.arms[i].coordinates.x, this.robot.arms[i].coordinates.y, this.robot.arms[i].coordinates.z, 'Arm' + i.toString(), 'rgb(91, 27, 223)');
+    for (var i = 0; i < this.robot.n_frames; i++) {
+      this.LineTraces[i] = this.CreateColorTrace_3D(this.robot.frames[i].coordinates.x, this.robot.frames[i].coordinates.y, this.robot.frames[i].coordinates.z, 'Frames' + i.toString(), 'rgb(91, 27, 223)');
     }
   }
 
   updateTraces() {
     var _data = {
-      xs: Array.apply(null, Array(this.robot.n_arms).map(Number.prototype.valueOf, 0)),
-      ys: Array.apply(null, Array(this.robot.n_arms).map(Number.prototype.valueOf, 0)),
-      zs: Array.apply(null, Array(this.robot.n_arms).map(Number.prototype.valueOf, 0)),
-      indices: Array.apply(null, Array(this.robot.n_arms).map(Number.prototype.valueOf, 0)),
+      xs: Array.apply(null, Array(this.robot.n_frames).map(Number.prototype.valueOf, 0)),
+      ys: Array.apply(null, Array(this.robot.n_frames).map(Number.prototype.valueOf, 0)),
+      zs: Array.apply(null, Array(this.robot.n_frames).map(Number.prototype.valueOf, 0)),
+      indices: Array.apply(null, Array(this.robot.n_frames).map(Number.prototype.valueOf, 0)),
     }
 
-    for (var i = 0; i < this.robot.n_arms; i++) {
-      _data.xs[i] = this.robot.arms[i].coordinates.x;
-      _data.ys[i] = this.robot.arms[i].coordinates.y;
-      _data.zs[i] = this.robot.arms[i].coordinates.z;
+    for (var i = 0; i < this.robot.n_frames; i++) {
+      _data.xs[i] = this.robot.frames[i].coordinates.x;
+      _data.ys[i] = this.robot.frames[i].coordinates.y;
+      _data.zs[i] = this.robot.frames[i].coordinates.z;
       _data.indices[i] = i;
     }
     return _data;
@@ -49,7 +49,7 @@ class Simulation {
   updateGraphs() {
     var _data = this.updateTraces();
     console.log(_data);
-    Plotly.restyle(this.GRAPH_3D, { //needs to be an array cointaing the x value for each arm
+    Plotly.restyle(this.GRAPH_3D, { //needs to be an array cointaing the x value for each frame
           'x': _data.xs,
           'y': _data.ys,
           'z': _data.zs,

@@ -3,51 +3,57 @@ class Robot {
 
     this.TABLE = document.getElementById('DHtable');
 
-    this.n_arms = null;
-    this.arms = Array.apply(null, Array(this.n_arms).map(Number.prototype.valueOf, 0)); // empty
-    this.armTMs = Array.apply(null, Array(this.n_arms).map(Number.prototype.valueOf, 0));
+    this.n_frames = null;
+    this.frames = Array.apply(null, Array(this.n_frames).map(Number.prototype.valueOf, 0)); // empty
+    this.frameTMs = Array.apply(null, Array(this.n_frames).map(Number.prototype.valueOf, 0));
+    this.IM = null;
 
   }
 
-  createArm(i) { //Table is a string, values are numbers
+  createFrame(i) { //Table is a string, values are numbers
     var be = Number(this.TABLE.rows[i + 1].cells[1].innerHTML) * 0.01745329251;
     var a = Number(this.TABLE.rows[i + 1].cells[2].innerHTML);
     var d = Number(this.TABLE.rows[i + 1].cells[3].innerHTML);
     var th = Number(this.TABLE.rows[i + 1].cells[4].innerHTML) * 0.01745329251;
-    this.arms[i] = new Arm(be, a, d, th);
-    this.arms[i].updateTM();
-    this.arms[i].updateType(0);
+    this.frames[i] = new Frame(be, a, d, th);
+    this.frames[i].updateTM();
+    this.frames[i].updateType(0);
   }
 
   //can only update the angle or a prismatic distance
-  updateArmValues(arm, val) {
-    if (arm.type == 0) { //revolute
-      arm.updateAngles(val);
+  updateFrameValues(frame, val) {
+    if (frame.type == 0) { //revolute
+      frame.updateAngles(val);
     }
-    else if (arm.type == 1) { //prismatic
-      arm.updateDistance(val);
+    else if (frame.type == 1) { //prismatic
+      frame.updateDistance(val);
     }
     else {
-      alert("Error f<updateArm> in Robot.js")
+      alert("Error f<updateFrame> in Robot.js")
     }
   }
 
   buildRobot() {
     //Update Table values;
-    this.n_arms = this.TABLE.rows.length - 1;
+    this.n_frames = this.TABLE.rows.length - 1;
+    this.createIM(this.n_frames)
     this.TABLE = document.getElementById('DHtable');
-    for (var i = 0; i < this.n_arms; i++) {
+    for (var i = 0; i < this.n_frames; i++) {
       console.log(i);
-      this.createArm(i);
+      this.createFrame(i);
     };
+  }
+
+  createIM(numberOfFrames) {
+    this.IM = math.identity(numberOfFrames);
   }
 
   updateFwKin(i) { //THIS IS WHERE THE PROBLEM IS
     if (i == 0) {
-      this.armTMs[0] = this.arms[0].TM;
+      this.frameTMs[0] = this.frames[0].TM;
     } else {
       // for (var i = 1; i < this.n_arms; i++) {
-      this.armTMs[i] = math.multiply(this.armTMs[i - 1], this.arms[i].TM);
+      this.frameTMs[i] = math.multiply(this.frameTMs[i - 1], this.frames[i].TM);
     }
     // }
   }
@@ -55,20 +61,20 @@ class Robot {
   updateXYZ(i) {
     // for (var i = 0; i < this.n_arms; i++) {
     if (i == 0) {
-      this.arms[i].coordinates.x = [0, this.armTMs[i][0][3]];
-      this.arms[i].coordinates.y = [0, this.armTMs[i][1][3]];
-      this.arms[i].coordinates.z = [0, this.armTMs[i][2][3]];
+      this.frames[i].coordinates.x = [0, this.frameTMs[i][0][3]];
+      this.frames[i].coordinates.y = [0, this.frameTMs[i][1][3]];
+      this.frames[i].coordinates.z = [0, this.frameTMs[i][2][3]];
     } else {
-      this.arms[i].coordinates.x = [this.armTMs[i - 1][0][3], this.armTMs[i][0][3]];
-      this.arms[i].coordinates.y = [this.armTMs[i - 1][1][3], this.armTMs[i][1][3]];
-      this.arms[i].coordinates.z = [this.armTMs[i - 1][2][3], this.armTMs[i][2][3]];
+      this.frames[i].coordinates.x = [this.frameTMs[i - 1][0][3], this.frameTMs[i][0][3]];
+      this.frames[i].coordinates.y = [this.frameTMs[i - 1][1][3], this.frameTMs[i][1][3]];
+      this.frames[i].coordinates.z = [this.frameTMs[i - 1][2][3], this.frameTMs[i][2][3]];
     }
     // }
   }
 
   updateRobot() { //put everything here when we need to update the robot
-    for (var i = 0; i < this.n_arms; i++) {
-      this.arms[i].updateTM();
+    for (var i = 0; i < this.n_frames; i++) {
+      this.frames[i].updateTM();
       this.updateFwKin(i);
       this.updateXYZ(i);
     }
@@ -77,6 +83,7 @@ class Robot {
     // console.log(this.arms[1].coordinates.x[0])
     // console.log(this.arms[1].coordinates.x[1])
   }
+
 
   // createIM() {
   //   var IM = Array.apply(null, Array(this.n_arms).map(Number.prototype.valueOf, 0));

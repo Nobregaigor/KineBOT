@@ -4,7 +4,7 @@ $(document).ready(function() {
   var Simu = new Simulation(Bot);
 
   document.getElementById("forwardKinematics").style.display = "none";
-  document.getElementById("inverseKinematics").style.display = "none";
+  // document.getElementById("inverseKinematics").style.display = "none";
 
   //Add a row to table
   document.getElementById("addFrameButton").addEventListener("click", function() {
@@ -76,19 +76,19 @@ $(document).ready(function() {
       DIVsliders.appendChild(document.createTextNode("Member " + (i + 1)));
       // Create an <input> element, set its type and name attributes
 
-      // ___________________________________ DO NOT KNOW WHY ______________________________ //
-      // _____________________________ LABELS AND SPAN VALUE ARE NOT WORKING ______________ //
-      // _____________________________ LABELS AND SPAN VALUE ARE NOT WORKING ______________ //
-      var label = document.createElement("label");
-      var labelfor = "slider" + i;
-      label.setAttribute("for", labelfor);
-      var span = document.createElement("span");
-      span.setAttribute("class", "SliderValue");
-      input.appendChild(span);
-      DIVsliders.appendChild(label);
-      // _____________________________ LABELS AND SPAN VALUE ARE NOT WORKING ______________ //
-      // _____________________________ LABELS AND SPAN VALUE ARE NOT WORKING ______________ //
-      // ___________________________________ DO NOT KNOW WHY ______________________________ //
+      // // ___________________________________ DO NOT KNOW WHY ______________________________ //
+      // // _____________________________ LABELS AND SPAN VALUE ARE NOT WORKING ______________ //
+      // // _____________________________ LABELS AND SPAN VALUE ARE NOT WORKING ______________ //
+      // var label = document.createElement("label");
+      // var labelfor = "slider" + i;
+      // label.setAttribute("for", labelfor);
+      // var span = document.createElement("span");
+      // span.setAttribute("class", "SliderValue");
+      // input.appendChild(span);
+      // DIVsliders.appendChild(label);
+      // // _____________________________ LABELS AND SPAN VALUE ARE NOT WORKING ______________ //
+      // // _____________________________ LABELS AND SPAN VALUE ARE NOT WORKING ______________ //
+      // // ___________________________________ DO NOT KNOW WHY ______________________________ //
 
       var input = document.createElement("input");
       input.id = "slider" + i;
@@ -105,13 +105,13 @@ $(document).ready(function() {
     }
   }
 
-  function addSliderFunctions(slider,armval){
+  function addSliderFunctions(slider,frameval){
     slider.addEventListener("input", function() {
       // document.getElementById("Slider3Value").innerHTML = pad(parseFloat(this.value).toFixed(0), 3);
-      Bot.updateArmValues(Bot.arms[armval], this.value);
+      Bot.updateFrameValues(Bot.frames[frameval], this.value);
       Bot.updateRobot();
       Simu.updateGraphs();
-      console.log(Bot.arms[armval]);
+      console.log(Bot.frames[frameval]);
 
     });
   }

@@ -1,4 +1,4 @@
-class Arm {
+class Frame {
   constructor(be, a, d, th) {
 
     this.type = null;
