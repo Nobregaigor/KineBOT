@@ -1,7 +1,7 @@
 class Frame {
   constructor(be, a, d, th) {
 
-    this.type = null;
+    this.type = null; // 0 if revolute, 1 if prismatic
 
     this.properties = {
       be: be,
@@ -15,6 +15,18 @@ class Frame {
       [null, null, null, null],
       [null, null, null, null],
       [0, 0, 0, 1]
+    ];
+
+    this.RM = [
+      [null, null, null],
+      [null, null, null],
+      [null, null, null]
+    ];
+
+    this.PM = [
+      [null],
+      [null],
+      [null]
     ];
 
     this.coordinates = {
@@ -58,6 +70,20 @@ class Frame {
     this.TM[2][1] = Math.cos(this.properties.th) * Math.sin(this.properties.be);
     this.TM[2][2] = Math.cos(this.properties.be);
     this.TM[2][3] = Math.cos(this.properties.be) * this.properties.d;
+  }
+
+  updateRM() {
+    for (var i = 0; i < 3; i++) {
+      for (var j = 0; j < 3; j++) {
+        this.RM[i][j] = this.TM[i][j];
+      }
+    }
+  }
+
+  updatePM() {
+    for (var i = 0; i < 3; i++) {
+      this.PM[i][0] = this.TM[i][3];
+    }
   }
 
 

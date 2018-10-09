@@ -6,7 +6,14 @@ class Robot {
     this.n_frames = null;
     this.frames = Array.apply(null, Array(this.n_frames).map(Number.prototype.valueOf, 0)); // empty
     this.frameTMs = Array.apply(null, Array(this.n_frames).map(Number.prototype.valueOf, 0));
+    this.frameRMs = Array.apply(null, Array(this.n_frames).map(Number.prototype.valueOf, 0));
+    this.framePMs = Array.apply(null, Array(this.n_frames).map(Number.prototype.valueOf, 0));
+    this.frameVs = Array.apply(null, Array(this.n_frames).map(Number.prototype.valueOf, 0));
+    this.frameWs = Array.apply(null, Array(this.n_frames).map(Number.prototype.valueOf, 0));
     this.IM = null;
+    this.Z11 = math.zeros(1,3);
+    this.frameVs[0] = math.zeros(1,3);
+    this.frameWs[0] = math.zeros(1,3);
 
   }
 
@@ -17,6 +24,8 @@ class Robot {
     var th = Number(this.TABLE.rows[i + 1].cells[4].innerHTML) * 0.01745329251;
     this.frames[i] = new Frame(be, a, d, th);
     this.frames[i].updateTM();
+    this.frames[i].updateRM();
+    this.frames[i].updatePM();
     this.frames[i].updateType(0);
   }
 
@@ -29,7 +38,7 @@ class Robot {
       frame.updateDistance(val);
     }
     else {
-      alert("Error f<updateFrame> in Robot.js")
+      alert("Error f<updateFrameValues> in Robot.js\nFrame type not specified.")
     }
   }
 
@@ -48,7 +57,7 @@ class Robot {
     this.IM = math.identity(numberOfFrames);
   }
 
-  updateFwKin(i) { //THIS IS WHERE THE PROBLEM IS
+  updateFK(i) { //THIS IS WHERE THE PROBLEM IS
     if (i == 0) {
       this.frameTMs[0] = this.frames[0].TM;
     } else {
@@ -56,6 +65,51 @@ class Robot {
       this.frameTMs[i] = math.multiply(this.frameTMs[i - 1], this.frames[i].TM);
     }
     // }
+  }
+
+  updateIK(i) {
+    if (i == 0) {
+      continue
+    } else {
+      this.frameVMs[i] = this.updateVM(
+                        this.frameRMs[i],
+                        this.frameVMs[i - 1],
+                        this.frameWMs[i - 1],
+                        this.framePMs[i - 1],
+                        this.frames[i].properties.d,
+                        this.Z11,
+                        this.frames[i].type);
+      this.frameWMs[i] = this.updateWM(
+                        this.frameRMs[i],
+                        this.frameWMs[i - 1],
+                        this.frames[i].properties.th,
+                        this.Z11,
+                        this.frames[i].type);
+    }
+  }
+
+  updateVM(RM, VM, WM, PM, d, ZM, type) {
+    if (type == 0) {
+      vMatrix = math.multiply(math.transpose(RM),(VM + math.cross(WM,PM)));
+    } else if (type == 1) {
+      vMatrix = math.multiply(math.transpose(RM),(VM + math.cross(WM,PM))) + math.multiply(d,ZM);
+    }
+    else {
+      alert("Error f<updateVM> in Robot.js\nFrame type not specified.")
+    }
+    return vMatrix;
+  }
+
+  updateWM(RM, WM, th, ZM, type) {
+    if (type == 0) {
+      wMatrix = math.multiply(math.transpose(RM),WM) + math.multiply(th,ZM);
+    } else if (type == 1) {
+      wMatrix = math.multiply(math.transpose(RM),WM);
+    }
+    else {
+      alert("Error f<updateWM> in Robot.js\nFrame type not specified.")
+    }
+    return wMatrix;
   }
 
   updateXYZ(i) {
@@ -75,14 +129,24 @@ class Robot {
   updateRobot() { //put everything here when we need to update the robot
     for (var i = 0; i < this.n_frames; i++) {
       this.frames[i].updateTM();
-      this.updateFwKin(i);
+      this.frames[i].updateRM();
+      this.frames[i].updatePM();
+      this.updateFK(i);
       this.updateXYZ(i);
     }
+  }
+
+  updateRobot2() {
+    for (var i = 0; i < this.n_frames; i++) {
+      // this.frames[i].updateTM();
+      this.updateIK(i);
+    }
+  }
     //console.log(this.arms);
     //console.log(this.armTMs);
     // console.log(this.arms[1].coordinates.x[0])
     // console.log(this.arms[1].coordinates.x[1])
-  }
+}
 
 
   // createIM() {
@@ -98,5 +162,3 @@ class Robot {
   //     }
   //   }
   // }
-
-}
