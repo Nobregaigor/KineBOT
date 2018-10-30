@@ -27,6 +27,7 @@ $(document).ready(function() {
     Bot.updateRobot();
     Simu.startLayout();
     createSliders();
+    console.log("Robot Object below:")
     console.log(Bot);
     document.getElementById("forwardKinematics").style.display = "block";
     // document.getElementById("inverseKinematics").style.display = "block";
@@ -111,7 +112,7 @@ $(document).ready(function() {
       Bot.updateFrameValues(Bot.frames[frameval], this.value);
       Bot.updateRobot();
       Simu.updateGraphs();
-      console.log(Bot.frames[frameval]);
+      //console.log(Bot.frames[frameval]);
 
     });
   }

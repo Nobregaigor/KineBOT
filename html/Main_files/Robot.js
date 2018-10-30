@@ -3,19 +3,86 @@ class Robot {
 
     this.TABLE = document.getElementById('DHtable');
 
-    this.n_frames = null;
-    this.frames = Array.apply(null, Array(this.n_frames).map(Number.prototype.valueOf, 0)); // empty
+    //Initializing all variables
+
+    //n_frames: number of frames of robot
+    //frames: array of all frames
+    //frameTMs: array of all frame transformation matrices
+    //frameRMs: array of all frame rotation matrices
+    //framePMs: array of all frame position matrices
+    //frameVs: array of all linear velocity matrices, first half of Jacobian
+    //frameWs: array of all angular velocity matrices, second half of Jacobian
+    //IM: identity matrix
+    this.n_frames = 4;
+    //this.frames = Array.apply(null, Array(this.n_frames).map(Number.prototype.valueOf, 0)); // empty
+    this.frames = Array.apply(null,Array(this.n_frames));
+    console.log(this.frames);
     this.frameTMs = Array.apply(null, Array(this.n_frames).map(Number.prototype.valueOf, 0));
+    console.log(this.frameTMs);
+    this.frameTEST = [];
+    console.log(this.frameTEST);
     this.frameRMs = Array.apply(null, Array(this.n_frames).map(Number.prototype.valueOf, 0));
     this.framePMs = Array.apply(null, Array(this.n_frames).map(Number.prototype.valueOf, 0));
     this.frameVs = Array.apply(null, Array(this.n_frames).map(Number.prototype.valueOf, 0));
     this.frameWs = Array.apply(null, Array(this.n_frames).map(Number.prototype.valueOf, 0));
     this.IM = null;
+
+    // For Jacobian calculation.
     this.Z11 = math.zeros(1,3);
     this.frameVs[0] = math.zeros(1,3);
     this.frameWs[0] = math.zeros(1,3);
 
+    this.symTM = [
+      [null, null, null, null],
+      [null, null, null, null],
+      [null, null, null, null]
+    ];
+
+    this.stringTM = [
+      ['cos(th)',         '-sin(th)',         '0',        'a'         ],
+      ['sin(th)*cos(be)', 'cos(th)*cos(be)',  '-sin(be)', '-sin(be)*d'],
+      ['sin(th)*sin(be)', 'cos(th)*sin(be)',  'cos(be)',  'cos(be)*d' ],
+      ['0',             , '0',                '0',        '1'         ]
+    ];
+
+    // TESTING WHATSUP WHATSUP
+    // this.example1 = nerdamer.matrix(math.string(this.stringTM)); // stringTM input is 1 array.
+    // console.log(this.stringTM.toString()); // This won't work because it spits array of arrays as all elements in string.
+    // console.log("Example 2: ")
+    // this.example2 = nerdamer.matrix(this.stringTM[0],this.stringTM[1],this.stringTM[2]); //stringTM.elements input is 3 arrays.
+    // console.log(this.example2.toString())
+    // console.log(this.example2.multiply('sin(y)').toString()) // Multiplication is possible. Also matrix multiplication is possible.
+
+    this.nerdTM = nerdamer.matrix(this.stringTM[0],this.stringTM[1],this.stringTM[2]);
+
+
+
+    // this.nerdTM1[0] = nerdamer.diff(nerdamer(this.stringTM[0]),'th');
+    // this.nerdTM1[1] = nerdamer.diff(nerdamer(this.stringTM[1]),'th');
+    // this.nerdTM2 = nerdamer.matrix(this.nerdTM1.toString());
+
+    //console.log(this.nerdTM2.multiply('2').toString())
+
+    // for (var i = 0; i < 3; i++) {
+    //   this.symTMnerd[i] = nerdamer('[' + this.stringTM[i].toString() + ']');
+    //   console.log(this.symTMnerd[i].toString());
+    // }
+    //
+    // for (var i = 0; i < 3; i++) {
+    //   this.symTMnerdDiff[i] = nerdamer('diff([' + this.stringTM[i].toString() + '], th, 1)');
+    //   //this.symTMnerd[i] = nerdamer('diff([' + this.stringTM[i].toString() + '], th, 1)').toString();
+    //   console.log(this.symTMnerdDiff[i].toString());
+    // }
+    // //console.log(this.symTMnerd)
+
   }
+
+  calculateJacobian() {
+    for (i = 0; i < this.n_frames; i++) {
+      this.frameVs = updateIK(i)
+    }
+  }
+
 
   createFrame(i) { //Table is a string, values are numbers
     var be = Number(this.TABLE.rows[i + 1].cells[1].innerHTML) * 0.01745329251;
@@ -23,9 +90,9 @@ class Robot {
     var d = Number(this.TABLE.rows[i + 1].cells[3].innerHTML);
     var th = Number(this.TABLE.rows[i + 1].cells[4].innerHTML) * 0.01745329251;
     this.frames[i] = new Frame(be, a, d, th);
-    this.frames[i].updateTM();
-    this.frames[i].updateRM();
-    this.frames[i].updatePM();
+    // this.frames[i].updateTM(this.symTM);
+    // this.frames[i].updateRM();
+    // this.frames[i].updatePM();
     this.frames[i].updateType(0);
   }
 
@@ -42,13 +109,29 @@ class Robot {
     }
   }
 
+  compileSymTM() {
+    var nodeTM = [null, null, null];
+    for (var i = 0; i < 3; i++) {
+      nodeTM[i] = math.parse(this.stringTM[i]);
+      for (var j = 0; j < 4; j++) {
+        this.symTM[i][j] = nodeTM[i][j].compile();
+      }
+    }
+  }
+
+
+  compileSymTMnerd() {
+
+  }
+
+
   buildRobot() {
     //Update Table values;
     this.n_frames = this.TABLE.rows.length - 1;
     this.createIM(this.n_frames)
     this.TABLE = document.getElementById('DHtable');
+    this.compileSymTM();
     for (var i = 0; i < this.n_frames; i++) {
-      console.log(i);
       this.createFrame(i);
     };
   }
@@ -128,11 +211,11 @@ class Robot {
 
   updateRobot() { //put everything here when we need to update the robot
     for (var i = 0; i < this.n_frames; i++) {
-      this.frames[i].updateTM();
+      this.frames[i].updateTM(this.symTM);
       this.frames[i].updateRM();
       this.frames[i].updatePM();
-      this.updateFK(i);
-      this.updateXYZ(i);
+      //this.updateFK(i);
+      //this.updateXYZ(i);
     }
   }
 

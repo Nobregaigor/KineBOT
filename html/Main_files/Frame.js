@@ -1,41 +1,42 @@
 class Frame {
   constructor(be, a, d, th) {
 
-    this.type = null; // 0 if revolute, 1 if prismatic
+    this.type = null; // type of frame: 0 if revolute, 1 if prismatic.
 
-    this.properties = {
+    this.properties = { // angles and distances from DH parameters.
       be: be,
       a: a,
       d: d,
       th: th,
     }
 
-    this.TM = [
+    this.TM = [ // transformation matrix.
       [null, null, null, null],
       [null, null, null, null],
       [null, null, null, null],
       [0, 0, 0, 1]
     ];
 
-    this.RM = [
+    this.RM = [ // rotation matrix.
       [null, null, null],
       [null, null, null],
       [null, null, null]
     ];
 
-    this.PM = [
+    this.PM = [ // position matrix.
       [null],
       [null],
       [null]
     ];
 
-    this.coordinates = {
+    this.coordinates = { // coordinates of frame for plotting purposes.
       x: [null, null],
       y: [null, null],
-      z: [null, null],
+      z: [null, null]
     }
 
   }
+
 
   updateType(val) {
     // if ((isNaN(this.properties.d) == true) && (isNaN(this.properties.th) == false)) {
@@ -48,31 +49,29 @@ class Frame {
     this.type = val; // 0 is revolute and 1 is prismatic
   }
 
-  updateAngles(val) {
-    this.properties.th = val * 0.01745329251; //(Math.PI/180);
+
+  updateAngles(val) { // Updates angle values 'th' of 'properties' values.
+    this.properties.th = val * 0.01745329251; // (Math.PI/180);
   }
-  updateDistance(val) {
+
+
+  updateDistance(val) { // Updates distance values 'd' of 'properties' values.
     this.properties.d = val;
   }
 
-  updateTM() {
-    this.TM[0][0] = Math.cos(this.properties.th);
-    this.TM[0][1] = -1 * Math.sin(this.properties.th);
-    this.TM[0][2] = 0;
-    this.TM[0][3] = this.properties.a;
 
-    this.TM[1][0] = Math.sin(this.properties.th) * Math.cos(this.properties.be);
-    this.TM[1][1] = Math.cos(this.properties.th) * Math.cos(this.properties.be);
-    this.TM[1][2] = -Math.sin(this.properties.be);
-    this.TM[1][3] = -Math.sin(this.properties.be) * this.properties.d;
-
-    this.TM[2][0] = Math.sin(this.properties.th) * Math.sin(this.properties.be);
-    this.TM[2][1] = Math.cos(this.properties.th) * Math.sin(this.properties.be);
-    this.TM[2][2] = Math.cos(this.properties.be);
-    this.TM[2][3] = Math.cos(this.properties.be) * this.properties.d;
+  updateTM(symTM) { // Takes symbolic transformation matrix and evaluates using 'properties' values.
+    console.log(symTM)
+    for (var i = 0; i < 3; i++) {
+      for (var j = 0; j < 4; j++) {
+        this.TM[i][j] = symTM[i][j].eval(this.properties);
+      }
+    }
+    console.log(this.TM)
   }
 
-  updateRM() {
+
+  updateRM() { // Updates rotation matrix from transformation matrix.
     for (var i = 0; i < 3; i++) {
       for (var j = 0; j < 3; j++) {
         this.RM[i][j] = this.TM[i][j];
@@ -80,15 +79,16 @@ class Frame {
     }
   }
 
-  updatePM() {
+
+  updatePM() { // Updates position matrix from transformation matrix.
     for (var i = 0; i < 3; i++) {
       this.PM[i][0] = this.TM[i][3];
     }
   }
 
 
-  updateCoordinates(cord, val) { //NOT SURE IF THIS WORK. BUT IF IT WORKS, ITS DOPE!!!
-    this.cordinate.cord = val;
-  }
+  // updateCoordinates(cord, val) { //NOT SURE IF THIS WORK. BUT IF IT WORKS, ITS DOPE!!!
+  //   this.cordinate.cord = val;
+  // }
 
 }
