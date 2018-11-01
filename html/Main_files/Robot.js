@@ -15,22 +15,18 @@ class Robot {
     //IM: identity matrix
     this.n_frames = 4;
     //this.frames = Array.apply(null, Array(this.n_frames).map(Number.prototype.valueOf, 0)); // empty
-    this.frames = Array.apply(null,Array(this.n_frames));
-    console.log(this.frames);
-    this.frameTMs = Array.apply(null, Array(this.n_frames).map(Number.prototype.valueOf, 0));
-    console.log(this.frameTMs);
-    this.frameTEST = [];
-    console.log(this.frameTEST);
-    this.frameRMs = Array.apply(null, Array(this.n_frames).map(Number.prototype.valueOf, 0));
-    this.framePMs = Array.apply(null, Array(this.n_frames).map(Number.prototype.valueOf, 0));
-    this.frameVs = Array.apply(null, Array(this.n_frames).map(Number.prototype.valueOf, 0));
-    this.frameWs = Array.apply(null, Array(this.n_frames).map(Number.prototype.valueOf, 0));
+    this.frames = Array.apply(null, Array(this.n_frames));
+    this.frameTMs = Array.apply(null, Array(this.n_frames));
+    this.frameRMs = Array.apply(null, Array(this.n_frames));
+    this.framePMs = Array.apply(null, Array(this.n_frames));
+    this.frameVs = Array.apply(null, Array(this.n_frames));
+    this.frameWs = Array.apply(null, Array(this.n_frames));
     this.IM = null;
 
     // For Jacobian calculation.
-    this.Z11 = math.zeros(1,3);
-    this.frameVs[0] = math.zeros(1,3);
-    this.frameWs[0] = math.zeros(1,3);
+    this.Z11 = math.zeros(1, 3);
+    this.frameVs[0] = math.zeros(1, 3);
+    this.frameWs[0] = math.zeros(1, 3);
 
     this.symTM = [
       [null, null, null, null],
@@ -38,12 +34,31 @@ class Robot {
       [null, null, null, null]
     ];
 
-    this.stringTM = [
-      ['cos(th)',         '-sin(th)',         '0',        'a'         ],
-      ['sin(th)*cos(be)', 'cos(th)*cos(be)',  '-sin(be)', '-sin(be)*d'],
-      ['sin(th)*sin(be)', 'cos(th)*sin(be)',  'cos(be)',  'cos(be)*d' ],
-      ['0',             , '0',                '0',        '1'         ]
-    ];
+    this.stringTM = '[' +
+    '[cos(th), -sin(th), 0, a],' +
+    '[sin(th)*cos(be), cos(th)*cos(be), -sin(be), -sin(be)*d],' +
+    '[sin(th)*sin(be), cos(th)*sin(be), cos(be), cos(be)*d],' +
+    '[0, 0, 0, 1]' +
+    ']';
+
+    this.nerdamerTM = nerdamer(this.stringTM)
+
+    this.stringTM2 = [['cos(th)', '-sin(th)','0','a'],
+          ['sin(th)*cos(be)', 'cos(th)*cos(be)', '-sin(be)', '-sin(be)*d'],
+          ['sin(th)*sin(be)', 'cos(th)*sin(be)', 'cos(be), cos(be)*d'],
+          ['0', '0', '0', '1']
+        ];
+
+    this.nerdamerTM2 = nerdamer.matrix(this.stringTM2[0],this.stringTM2[1],this.stringTM2[2],this.stringTM2[3])
+    console.log(this.nerdamerTM2)
+    console.log(this.nerdamerTM2.toString())
+    this.nerdamerTM3 = nerdamer.matrix([this.nerdamerTM2.symbol.elements[0][3]],[this.nerdamerTM2.symbol.elements[1][3]],[this.nerdamerTM2.symbol.elements[2][3]])
+    console.log(this.nerdamerTM3)
+    console.log(this.nerdamerTM3.toString())
+    console.log((nerdamer(this.nerdamerTM3, {d: 10, be: 45*0.01745329251, a: 15*0.01745329251}, ['numer'])).text('decimals'))
+    this.nerdamerTM4 = this.nerdamerTM3.multiply(nerdamer.transpose(this.nerdamerTM3))
+    console.log(this.nerdamerTM4)
+    console.log(this.nerdamerTM4.toString())
 
     // TESTING WHATSUP WHATSUP
     // this.example1 = nerdamer.matrix(math.string(this.stringTM)); // stringTM input is 1 array.
@@ -53,8 +68,20 @@ class Robot {
     // console.log(this.example2.toString())
     // console.log(this.example2.multiply('sin(y)').toString()) // Multiplication is possible. Also matrix multiplication is possible.
 
-    this.nerdTM = nerdamer.matrix(this.stringTM[0],this.stringTM[1],this.stringTM[2]);
+    // Working, but the conventional way (not using nerdamer.matrix)
+    // console.log(nerdamer(this.nerdamerTM).symbol)
+    // console.log(nerdamer(this.nerdamerTM.symbol.elements[0].elements[0]).multiply('th')) //This is how we multiply elements from a matrix with something.
+    // console.log(nerdamer([this.nerdamerTM.symbol.elements[0].elements[0],this.nerdamerTM.symbol.elements[0].elements[1]]).toString())
+    // console.log(nerdamer.transpose(nerdamer.matrix([this.nerdamerTM.symbol.elements[0].elements[0]],[this.nerdamerTM.symbol.elements[0].elements[1]]).multiply(5)))
+    //console.log(nerdamer(this.nerdamerTM).evaluate())
 
+    //console.log(nerdamer.diff(this.nerdTM.symbol.elements[0],'th'));
+    //console.log("__________");
+    //console.log(this.nerdTM.toString())
+
+
+
+    //console.log(nerdamer.diff(nerdamer(this.nerdTM.toString()),'th'));
 
 
     // this.nerdTM1[0] = nerdamer.diff(nerdamer(this.stringTM[0]),'th');
@@ -100,11 +127,9 @@ class Robot {
   updateFrameValues(frame, val) {
     if (frame.type == 0) { //revolute
       frame.updateAngles(val);
-    }
-    else if (frame.type == 1) { //prismatic
+    } else if (frame.type == 1) { //prismatic
       frame.updateDistance(val);
-    }
-    else {
+    } else {
       alert("Error f<updateFrameValues> in Robot.js\nFrame type not specified.")
     }
   }
@@ -155,29 +180,29 @@ class Robot {
       continue
     } else {
       this.frameVMs[i] = this.updateVM(
-                        this.frameRMs[i],
-                        this.frameVMs[i - 1],
-                        this.frameWMs[i - 1],
-                        this.framePMs[i - 1],
-                        this.frames[i].properties.d,
-                        this.Z11,
-                        this.frames[i].type);
+        this.frameRMs[i],
+        this.frameVMs[i - 1],
+        this.frameWMs[i - 1],
+        this.framePMs[i - 1],
+        this.frames[i].properties.d,
+        this.Z11,
+        this.frames[i].type);
+
       this.frameWMs[i] = this.updateWM(
-                        this.frameRMs[i],
-                        this.frameWMs[i - 1],
-                        this.frames[i].properties.th,
-                        this.Z11,
-                        this.frames[i].type);
+        this.frameRMs[i],
+        this.frameWMs[i - 1],
+        this.frames[i].properties.th,
+        this.Z11,
+        this.frames[i].type);
     }
   }
 
   updateVM(RM, VM, WM, PM, d, ZM, type) {
     if (type == 0) {
-      vMatrix = math.multiply(math.transpose(RM),(VM + math.cross(WM,PM)));
+      vMatrix = math.multiply(math.transpose(RM), (VM + math.cross(WM, PM)));
     } else if (type == 1) {
-      vMatrix = math.multiply(math.transpose(RM),(VM + math.cross(WM,PM))) + math.multiply(d,ZM);
-    }
-    else {
+      vMatrix = math.multiply(math.transpose(RM), (VM + math.cross(WM, PM))) + math.multiply(d, ZM);
+    } else {
       alert("Error f<updateVM> in Robot.js\nFrame type not specified.")
     }
     return vMatrix;
@@ -185,11 +210,10 @@ class Robot {
 
   updateWM(RM, WM, th, ZM, type) {
     if (type == 0) {
-      wMatrix = math.multiply(math.transpose(RM),WM) + math.multiply(th,ZM);
+      wMatrix = math.multiply(math.transpose(RM), WM) + math.multiply(th, ZM);
     } else if (type == 1) {
-      wMatrix = math.multiply(math.transpose(RM),WM);
-    }
-    else {
+      wMatrix = math.multiply(math.transpose(RM), WM);
+    } else {
       alert("Error f<updateWM> in Robot.js\nFrame type not specified.")
     }
     return wMatrix;
@@ -225,23 +249,23 @@ class Robot {
       this.updateIK(i);
     }
   }
-    //console.log(this.arms);
-    //console.log(this.armTMs);
-    // console.log(this.arms[1].coordinates.x[0])
-    // console.log(this.arms[1].coordinates.x[1])
+  //console.log(this.arms);
+  //console.log(this.armTMs);
+  // console.log(this.arms[1].coordinates.x[0])
+  // console.log(this.arms[1].coordinates.x[1])
 }
 
 
-  // createIM() {
-  //   var IM = Array.apply(null, Array(this.n_arms).map(Number.prototype.valueOf, 0));
-  //   for (var i = 0; i < this.n_arms; i++) {
-  //     IM[i] = Array.apply(null, Array(this.n_arms).map(Number.prototype.valueOf, 0));
-  //     for (var j = 0; j < this.n_arms; j++) {
-  //       if (i == j) {
-  //         IM[i][j] = 1;
-  //       } else {
-  //         IM[i][j] = 0;
-  //       }
-  //     }
-  //   }
-  // }
+// createIM() {
+//   var IM = Array.apply(null, Array(this.n_arms).map(Number.prototype.valueOf, 0));
+//   for (var i = 0; i < this.n_arms; i++) {
+//     IM[i] = Array.apply(null, Array(this.n_arms).map(Number.prototype.valueOf, 0));
+//     for (var j = 0; j < this.n_arms; j++) {
+//       if (i == j) {
+//         IM[i][j] = 1;
+//       } else {
+//         IM[i][j] = 0;
+//       }
+//     }
+//   }
+// }
