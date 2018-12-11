@@ -49,58 +49,24 @@ class Robot {
           ['0', '0', '0', '1']
         ];
 
+    // Here we take stringTM2 and we take each row and use it on nerdamer to create a full 4x4 matrix called nerdamerTM2
+    console.log('    stringTM2 converted to matrix 4x4 (nerdamerTM2)')
     this.nerdamerTM2 = nerdamer.matrix(this.stringTM2[0],this.stringTM2[1],this.stringTM2[2],this.stringTM2[3])
     console.log(this.nerdamerTM2)
     console.log(this.nerdamerTM2.toString())
+    // Here we extract the position matrix 3x1 from nerdamerTM2
+    console.log('    extracted position matrix from nerdamerTM2 and converted to matrix 3x1 (nerdamerTM3)')
     this.nerdamerTM3 = nerdamer.matrix([this.nerdamerTM2.symbol.elements[0][3]],[this.nerdamerTM2.symbol.elements[1][3]],[this.nerdamerTM2.symbol.elements[2][3]])
     console.log(this.nerdamerTM3)
     console.log(this.nerdamerTM3.toString())
+    // Here we substitute symbolic variables for values to get the values of the position matrix
     console.log((nerdamer(this.nerdamerTM3, {d: 10, be: 45*0.01745329251, a: 15*0.01745329251}, ['numer'])).text('decimals'))
+    // Here we take the transpose of nerdamerTM3 and multiply it by itself to test this ability
+    console.log('    transpose of nerdamerTM3 multiplied by nerdamerTM3 results in 3x3 (nerdamerTM4)')
     this.nerdamerTM4 = this.nerdamerTM3.multiply(nerdamer.transpose(this.nerdamerTM3))
     console.log(this.nerdamerTM4)
     console.log(this.nerdamerTM4.toString())
 
-    // TESTING WHATSUP WHATSUP
-    // this.example1 = nerdamer.matrix(math.string(this.stringTM)); // stringTM input is 1 array.
-    // console.log(this.stringTM.toString()); // This won't work because it spits array of arrays as all elements in string.
-    // console.log("Example 2: ")
-    // this.example2 = nerdamer.matrix(this.stringTM[0],this.stringTM[1],this.stringTM[2]); //stringTM.elements input is 3 arrays.
-    // console.log(this.example2.toString())
-    // console.log(this.example2.multiply('sin(y)').toString()) // Multiplication is possible. Also matrix multiplication is possible.
-
-    // Working, but the conventional way (not using nerdamer.matrix)
-    // console.log(nerdamer(this.nerdamerTM).symbol)
-    // console.log(nerdamer(this.nerdamerTM.symbol.elements[0].elements[0]).multiply('th')) //This is how we multiply elements from a matrix with something.
-    // console.log(nerdamer([this.nerdamerTM.symbol.elements[0].elements[0],this.nerdamerTM.symbol.elements[0].elements[1]]).toString())
-    // console.log(nerdamer.transpose(nerdamer.matrix([this.nerdamerTM.symbol.elements[0].elements[0]],[this.nerdamerTM.symbol.elements[0].elements[1]]).multiply(5)))
-    //console.log(nerdamer(this.nerdamerTM).evaluate())
-
-    //console.log(nerdamer.diff(this.nerdTM.symbol.elements[0],'th'));
-    //console.log("__________");
-    //console.log(this.nerdTM.toString())
-
-
-
-    //console.log(nerdamer.diff(nerdamer(this.nerdTM.toString()),'th'));
-
-
-    // this.nerdTM1[0] = nerdamer.diff(nerdamer(this.stringTM[0]),'th');
-    // this.nerdTM1[1] = nerdamer.diff(nerdamer(this.stringTM[1]),'th');
-    // this.nerdTM2 = nerdamer.matrix(this.nerdTM1.toString());
-
-    //console.log(this.nerdTM2.multiply('2').toString())
-
-    // for (var i = 0; i < 3; i++) {
-    //   this.symTMnerd[i] = nerdamer('[' + this.stringTM[i].toString() + ']');
-    //   console.log(this.symTMnerd[i].toString());
-    // }
-    //
-    // for (var i = 0; i < 3; i++) {
-    //   this.symTMnerdDiff[i] = nerdamer('diff([' + this.stringTM[i].toString() + '], th, 1)');
-    //   //this.symTMnerd[i] = nerdamer('diff([' + this.stringTM[i].toString() + '], th, 1)').toString();
-    //   console.log(this.symTMnerdDiff[i].toString());
-    // }
-    // //console.log(this.symTMnerd)
 
   }
 

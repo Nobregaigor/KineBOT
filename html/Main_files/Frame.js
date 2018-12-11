@@ -60,17 +60,6 @@ class Frame {
   }
 
 
-// Works with math.js
-  // updateTM(symTM) { // Takes symbolic transformation matrix and evaluates using 'properties' values.
-  //   console.log(symTM)
-  //   for (var i = 0; i < 3; i++) {
-  //     for (var j = 0; j < 4; j++) {
-  //       this.TM[i][j] = symTM[i][j].eval(this.properties);
-  //     }
-  //   }
-  //   console.log(this.TM)
-  // }
-
 // Works with nerdamer
   updateTM(symTM) { // Takes symbolic transformation matrix and evaluates using 'properties' values.
     console.log(symTM)
