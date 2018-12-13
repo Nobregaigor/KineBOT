@@ -13,84 +13,75 @@ class Robot {
     //frameVs: array of all linear velocity matrices, first half of Jacobian
     //frameWs: array of all angular velocity matrices, second half of Jacobian
     //IM: identity matrix
-    this.n_frames = 4;
-    //this.frames = Array.apply(null, Array(this.n_frames).map(Number.prototype.valueOf, 0)); // empty
+    this.n_frames = null;
     this.frames = Array.apply(null, Array(this.n_frames));
     this.frameTMs = Array.apply(null, Array(this.n_frames));
     this.frameRMs = Array.apply(null, Array(this.n_frames));
     this.framePMs = Array.apply(null, Array(this.n_frames));
-    this.frameVs = Array.apply(null, Array(this.n_frames));
-    this.frameWs = Array.apply(null, Array(this.n_frames));
+    this.frameVMs = Array.apply(null, Array(this.n_frames));
+    this.frameWMs = Array.apply(null, Array(this.n_frames));
     this.IM = null;
 
-    // For Jacobian calculation.
-    this.Z11 = math.zeros(1, 3);
-    this.frameVs[0] = math.zeros(1, 3);
-    this.frameWs[0] = math.zeros(1, 3);
 
-    this.symTM = [
-      [null, null, null, null],
-      [null, null, null, null],
-      [null, null, null, null]
-    ];
-
-    this.stringTM = '[' +
-    '[cos(th), -sin(th), 0, a],' +
-    '[sin(th)*cos(be), cos(th)*cos(be), -sin(be), -sin(be)*d],' +
-    '[sin(th)*sin(be), cos(th)*sin(be), cos(be), cos(be)*d],' +
-    '[0, 0, 0, 1]' +
-    ']';
-
-    this.nerdamerTM = nerdamer(this.stringTM)
-
-    this.stringTM2 = [['cos(th)', '-sin(th)','0','a'],
+    this.stringTM = [['cos(th)', '-sin(th)','0','a'],
           ['sin(th)*cos(be)', 'cos(th)*cos(be)', '-sin(be)', '-sin(be)*d'],
           ['sin(th)*sin(be)', 'cos(th)*sin(be)', 'cos(be), cos(be)*d'],
           ['0', '0', '0', '1']
         ];
 
-    // Here we take stringTM2 and we take each row and use it on nerdamer to create a full 4x4 matrix called nerdamerTM2
-    console.log('    stringTM2 converted to matrix 4x4 (nerdamerTM2)')
-    this.nerdamerTM2 = nerdamer.matrix(this.stringTM2[0],this.stringTM2[1],this.stringTM2[2],this.stringTM2[3])
-    console.log(this.nerdamerTM2)
-    console.log(this.nerdamerTM2.toString())
-    // Here we extract the position matrix 3x1 from nerdamerTM2
-    console.log('    extracted position matrix from nerdamerTM2 and converted to matrix 3x1 (nerdamerTM3)')
-    this.nerdamerTM3 = nerdamer.matrix([this.nerdamerTM2.symbol.elements[0][3]],[this.nerdamerTM2.symbol.elements[1][3]],[this.nerdamerTM2.symbol.elements[2][3]])
-    console.log(this.nerdamerTM3)
-    console.log(this.nerdamerTM3.toString())
-    // Here we substitute symbolic variables for values to get the values of the position matrix
-    console.log((nerdamer(this.nerdamerTM3, {d: 10, be: 45*0.01745329251, a: 15*0.01745329251}, ['numer'])).text('decimals'))
-    // Here we take the transpose of nerdamerTM3 and multiply it by itself to test this ability
-    console.log('    transpose of nerdamerTM3 multiplied by nerdamerTM3 results in 3x3 (nerdamerTM4)')
-    this.nerdamerTM4 = this.nerdamerTM3.multiply(nerdamer.transpose(this.nerdamerTM3))
-    console.log(this.nerdamerTM4)
-    console.log(this.nerdamerTM4.toString())
+            // TEST ZONE WITHIN THE CONSOLE
+            // Use this zone to test calculations on the browser's CONSOLE
 
 
+            // TEST ZONE WITHIN THE CONSOLE
   }
 
-  calculateJacobian() {
-    for (i = 0; i < this.n_frames; i++) {
-      this.frameVs = updateIK(i)
+
+  matrix_to_vector(matrix) {
+    // if matrix is 1x3, convert to 3x1 to extract elements and form a vector out of the matrix
+    // vector is needed to calculate cross products, according to testing and nerdamer's documentation
+    if ((matrix.symbol.rows() == 1) && (matrix.symbol.cols() == 3)) {
+      matrix = nerdamer.transpose(matrix)
     }
+    var vector = nerdamer.vector(matrix.symbol.elements[0], matrix.symbol.elements[1], matrix.symbol.elements[2])
+    return vector // returns 1x3 vector
+  }
+
+
+  vector_to_matrix(vector) {
+    // takes an 1xN vector as an input
+    // matrix is needed to perform matrix operations and transpositions
+    var matrix = nerdamer.transpose(nerdamer.matrix(vector))
+    return matrix // returns 3x1 matrix
+  }
+
+
+  initJacobianCalc() {
+    // initializing variables for inverse kinematic and Jacobian calculation
+    this.IM = nerdamer.imatrix(this.n_frames); //Needs to be -1 when end effector begins to be taken in consideration
+    this.Z11 = nerdamer.matrix(0,0,1);
+    this.frameVMs[0] = nerdamer.vector(0,0,0); //VM11 and WM11 started as vectors to compute calculations
+    this.frameWMs[0] = nerdamer.vector(0,0,0); //Subsequent VMs generated will be stored as vectors as well
   }
 
 
   createFrame(i) { //Table is a string, values are numbers
+    // For individual frame creation (function runs in for loop)
     var be = Number(this.TABLE.rows[i + 1].cells[1].innerHTML) * 0.01745329251;
     var a = Number(this.TABLE.rows[i + 1].cells[2].innerHTML);
     var d = Number(this.TABLE.rows[i + 1].cells[3].innerHTML);
     var th = Number(this.TABLE.rows[i + 1].cells[4].innerHTML) * 0.01745329251;
+    // Frame is created by creating and updating the TM, RM, PM and type by using the frame's properties (be,a,d,th)
     this.frames[i] = new Frame(be, a, d, th);
-    // this.frames[i].updateTM(this.symTM);
-    // this.frames[i].updateRM();
-    // this.frames[i].updatePM();
+    this.frames[i].createTM(this.stringTM);
+    this.frames[i].updateTM();
+    this.frames[i].updateRM();
+    this.frames[i].updatePM();
     this.frames[i].updateType(0);
   }
 
-  //can only update the angle or a prismatic distance
-  updateFrameValues(frame, val) {
+
+  updateFrameValues(frame, val) { // Function updates the angle or prismatic distance, depending on frame type
     if (frame.type == 0) { //revolute
       frame.updateAngles(val);
     } else if (frame.type == 1) { //prismatic
@@ -100,50 +91,72 @@ class Robot {
     }
   }
 
-  compileSymTM() {
-    var nodeTM = [null, null, null];
-    for (var i = 0; i < 3; i++) {
-      nodeTM[i] = math.parse(this.stringTM[i]);
-      for (var j = 0; j < 4; j++) {
-        this.symTM[i][j] = nodeTM[i][j].compile();
-      }
-    }
-  }
 
-
-  compileSymTMnerd() {
-
-  }
-
-
-  buildRobot() {
+  buildRobot() { // Function creates the frames necessary for the robot to be alive
     //Update Table values;
     this.n_frames = this.TABLE.rows.length - 1;
-    this.createIM(this.n_frames)
     this.TABLE = document.getElementById('DHtable');
-    this.compileSymTM();
     for (var i = 0; i < this.n_frames; i++) {
       this.createFrame(i);
     };
+    this.initJacobianCalc();
   }
 
-  createIM(numberOfFrames) {
-    this.IM = math.identity(numberOfFrames);
-  }
 
-  updateFK(i) { //THIS IS WHERE THE PROBLEM IS
+  updateFK(i) { // Function creates all TMs 0-to-N, stores them, and also stores its respective RMs and PMs
+    // When run on a loop of n-length, it creates, T01, T02, ... T0n-1, T0n, and extracts its respective R and P
+    // console.log('TM0' + (i+1).toString())
     if (i == 0) {
-      this.frameTMs[0] = this.frames[0].TM;
+      this.frameTMs[i] = this.frames[i].TM;
     } else {
-      // for (var i = 1; i < this.n_arms; i++) {
-      this.frameTMs[i] = math.multiply(this.frameTMs[i - 1], this.frames[i].TM);
+      this.frameTMs[i] = this.frameTMs[i - 1].multiply(this.frames[i].TM);
     }
-    // }
+    // console.log(this.frameTMs[i].toString())
+    this.frameRMs[i] = nerdamer.matrix(
+        this.frameTMs[i].symbol.elements[0].slice(0,3),
+        this.frameTMs[i].symbol.elements[1].slice(0,3),
+        this.frameTMs[i].symbol.elements[2].slice(0,3));
+    this.framePMs[i] = nerdamer.matrix(
+        [this.frameTMs[i].symbol.elements[0][3]],
+        [this.frameTMs[i].symbol.elements[1][3]],
+        [this.frameTMs[i].symbol.elements[2][3]]);
   }
+
+
+  updateVM(RM, VM, WM, PM, d, ZM, type) { // Function creates linear velocity matrix Vnn to compute Jacobian
+    if (type == 0) { //revolute
+      var vMatrix = nerdamer(nerdamer.transpose(RM)).multiply(this.vector_to_matrix(nerdamer(VM).add(nerdamer.cross(WM,this.matrix_to_vector(PM)))));
+      //Complex mumbo-jumbo translates into comment below:
+      //vMatrix = transpose(rmat)*(vmat + cross(wmat,pmat));
+    } else if (type == 1) { //prismatic
+      var vMatrix = nerdamer(nerdamer(nerdamer.transpose(RM)).multiply(this.vector_to_matrix(nerdamer(VM).add(nerdamer.cross(WM,this.matrix_to_vector(PM)))))).add(nerdamer(d).multiply(ZM));
+      //Complex mumbo-jumbo translates into comment below:
+      //vMatrix = transpose(rmat)*(vmat + cross(wmat,pmat)) + dp*zmat;
+    } else {
+      alert("Error f<updateVM> in Robot.js\nFrame type not specified.")
+    }
+    return this.matrix_to_vector(vMatrix); //returns vector form of the VM for further calculations
+  }
+
+
+  updateWM(RM, WM, th, ZM, type) { // Function creates angular velocity matrix Wnn to compute Jacobian
+    if (type == 0) { //revolute
+      var wMatrix = nerdamer(nerdamer(nerdamer.transpose(RM)).multiply(this.vector_to_matrix(WM))).add(nerdamer(th).multiply(ZM));
+      //Complex mumbo-jumbo translates into comment below:
+      //WMatrix = transpose(rmat)*wmat + thp*zmat;
+    } else if (type == 1) { //prismatic
+      var wMatrix = nerdamer(nerdamer.transpose(RM)).multiply(this.vector_to_matrix(WM));
+      //Complex mumbo-jumbo translates into comment below:
+      //WMatrix = transpose(rmat)*wmat;
+    } else {
+      alert("Error f<updateWM> in Robot.js\nFrame type not specified.")
+    }
+    return this.matrix_to_vector(wMatrix); //returns vector form of the WM for further calculations
+  }
+
 
   updateIK(i) {
     if (i == 0) {
-      continue
     } else {
       this.frameVMs[i] = this.updateVM(
         this.frameRMs[i],
@@ -163,75 +176,32 @@ class Robot {
     }
   }
 
-  updateVM(RM, VM, WM, PM, d, ZM, type) {
-    if (type == 0) {
-      vMatrix = math.multiply(math.transpose(RM), (VM + math.cross(WM, PM)));
-    } else if (type == 1) {
-      vMatrix = math.multiply(math.transpose(RM), (VM + math.cross(WM, PM))) + math.multiply(d, ZM);
-    } else {
-      alert("Error f<updateVM> in Robot.js\nFrame type not specified.")
-    }
-    return vMatrix;
-  }
 
-  updateWM(RM, WM, th, ZM, type) {
-    if (type == 0) {
-      wMatrix = math.multiply(math.transpose(RM), WM) + math.multiply(th, ZM);
-    } else if (type == 1) {
-      wMatrix = math.multiply(math.transpose(RM), WM);
-    } else {
-      alert("Error f<updateWM> in Robot.js\nFrame type not specified.")
-    }
-    return wMatrix;
-  }
+  // updateXYZ(i) {
+  //   // for (var i = 0; i < this.n_arms; i++) {
+  //   if (i == 0) {
+  //     this.frames[i].coordinates.x = [0, this.frameTMs[i][0][3]];
+  //     this.frames[i].coordinates.y = [0, this.frameTMs[i][1][3]];
+  //     this.frames[i].coordinates.z = [0, this.frameTMs[i][2][3]];
+  //   } else {
+  //     this.frames[i].coordinates.x = [this.frameTMs[i - 1][0][3], this.frameTMs[i][0][3]];
+  //     this.frames[i].coordinates.y = [this.frameTMs[i - 1][1][3], this.frameTMs[i][1][3]];
+  //     this.frames[i].coordinates.z = [this.frameTMs[i - 1][2][3], this.frameTMs[i][2][3]];
+  //   }
+  //   // }
+  // }
 
-  updateXYZ(i) {
-    // for (var i = 0; i < this.n_arms; i++) {
-    if (i == 0) {
-      this.frames[i].coordinates.x = [0, this.frameTMs[i][0][3]];
-      this.frames[i].coordinates.y = [0, this.frameTMs[i][1][3]];
-      this.frames[i].coordinates.z = [0, this.frameTMs[i][2][3]];
-    } else {
-      this.frames[i].coordinates.x = [this.frameTMs[i - 1][0][3], this.frameTMs[i][0][3]];
-      this.frames[i].coordinates.y = [this.frameTMs[i - 1][1][3], this.frameTMs[i][1][3]];
-      this.frames[i].coordinates.z = [this.frameTMs[i - 1][2][3], this.frameTMs[i][2][3]];
-    }
-    // }
-  }
 
   updateRobot() { //put everything here when we need to update the robot
     for (var i = 0; i < this.n_frames; i++) {
-      this.frames[i].updateTM(this.symTM);
+      this.frames[i].updateTM();
       this.frames[i].updateRM();
       this.frames[i].updatePM();
-      //this.updateFK(i);
+      this.updateFK(i);
+      this.updateIK(i);
       //this.updateXYZ(i);
     }
   }
 
-  updateRobot2() {
-    for (var i = 0; i < this.n_frames; i++) {
-      // this.frames[i].updateTM();
-      this.updateIK(i);
-    }
-  }
-  //console.log(this.arms);
-  //console.log(this.armTMs);
-  // console.log(this.arms[1].coordinates.x[0])
-  // console.log(this.arms[1].coordinates.x[1])
+
 }
-
-
-// createIM() {
-//   var IM = Array.apply(null, Array(this.n_arms).map(Number.prototype.valueOf, 0));
-//   for (var i = 0; i < this.n_arms; i++) {
-//     IM[i] = Array.apply(null, Array(this.n_arms).map(Number.prototype.valueOf, 0));
-//     for (var j = 0; j < this.n_arms; j++) {
-//       if (i == j) {
-//         IM[i][j] = 1;
-//       } else {
-//         IM[i][j] = 0;
-//       }
-//     }
-//   }
-// }

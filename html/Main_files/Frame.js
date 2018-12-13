@@ -10,31 +10,16 @@ class Frame {
       th: th,
     }
 
-    this.TM = [ // transformation matrix.
-      [null, null, null, null],
-      [null, null, null, null],
-      [null, null, null, null],
-      [0, 0, 0, 1]
-    ];
-
-    this.RM = [ // rotation matrix.
-      [null, null, null],
-      [null, null, null],
-      [null, null, null]
-    ];
-
-    this.PM = [ // position matrix.
-      [null],
-      [null],
-      [null]
-    ];
+    this.symTM = null; // Different symbolic and numerical matrices for calculations
+    this.TM = null;
+    this.RM = null;
+    this.PM = null;
 
     this.coordinates = { // coordinates of frame for plotting purposes.
       x: [null, null],
       y: [null, null],
       z: [null, null]
     }
-
   }
 
 
@@ -60,32 +45,23 @@ class Frame {
   }
 
 
-// Works with nerdamer
-  updateTM(symTM) { // Takes symbolic transformation matrix and evaluates using 'properties' values.
-    console.log(symTM)
-    for (var i = 0; i < 3; i++) {
-      for (var j = 0; j < 4; j++) {
-        this.TM[i][j] = symTM[i][j].eval(this.properties);
-      }
-    }
-    this.TM = nerdamer(this.TM)
-    console.log(this.TM)
+  createTM(stringTM) { // Takes general stringTM and converts it to symbolicTM.
+    this.symTM = nerdamer.matrix(stringTM[0],stringTM[1],stringTM[2],stringTM[3]);
+  }
+
+
+  updateTM() { // Updates transformation matrix, converts from symbolic to numerical.
+    this.TM = nerdamer(this.symTM, this.properties, ['numer']);
   }
 
 
   updateRM() { // Updates rotation matrix from transformation matrix.
-    for (var i = 0; i < 3; i++) {
-      for (var j = 0; j < 3; j++) {
-        this.RM[i][j] = this.TM[i][j];
-      }
-    }
+    this.RM = nerdamer.matrix(this.TM.symbol.elements[0].slice(0,3),this.TM.symbol.elements[1].slice(0,3),this.TM.symbol.elements[2].slice(0,3))
   }
 
 
   updatePM() { // Updates position matrix from transformation matrix.
-    for (var i = 0; i < 3; i++) {
-      this.PM[i][0] = this.TM[i][3];
-    }
+    this.PM = nerdamer.matrix([this.TM.symbol.elements[0][3]],[this.TM.symbol.elements[1][3]],[this.TM.symbol.elements[2][3]])
   }
 
 
